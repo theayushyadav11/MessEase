@@ -30,7 +30,7 @@ class CreatePoll : Fragment() {
     private lateinit var auth:FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var mess:Mess
-    private var scrollTo=100
+    private var scrollTo=1000
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

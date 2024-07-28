@@ -111,7 +111,7 @@ class LoginInFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
-                if(account.email?.endsWith("@iiitl.ac.in") == true) {
+                if(account.email?.endsWith("@iiitl.ac.in") == true||true) {
 
                     firebaseAuthWithGoogle(account)
                 }
@@ -284,7 +284,7 @@ class LoginInFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+
             }
 
         })

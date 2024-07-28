@@ -1,0 +1,43 @@
+package com.theayushyadav11.messease.viewModels
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.theayushyadav11.messease.models.AprMenu
+import com.theayushyadav11.messease.utils.Mess
+
+class UploadMenuViewModel : ViewModel() {
+    val auth=FirebaseAuth.getInstance()
+    val database=FirebaseDatabase.getInstance().reference
+    private val _menuList = MutableLiveData<List<AprMenu>>()
+    val menuList: LiveData<List<AprMenu>> get() = _menuList
+
+    init {
+        fetchMenu()
+    }
+
+    private fun fetchMenu() {
+            database.child("forApproval").addValueEventListener(object:ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val aprMenuList:MutableList<AprMenu> = mutableListOf()
+                    for(child in snapshot.children)
+                    {
+                        val aprMenu=child.getValue(AprMenu::class.java)
+                        aprMenu?.let { aprMenuList.add(aprMenu) }
+                    }
+                    _menuList.value=aprMenuList
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+    }
+
+}

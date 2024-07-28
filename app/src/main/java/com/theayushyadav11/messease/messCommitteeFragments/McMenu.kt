@@ -19,11 +19,12 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.theayushyadav11.messease.databinding.FragmentMcMenuBinding
 import com.theayushyadav11.messease.utils.Mess
+import com.theayushyadav11.myapplication.models.Menu
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class McMenu : Fragment() {
+class McMenu() : Fragment() {
 
     private lateinit var binding: FragmentMcMenuBinding
     val REQUEST_CODE = 1232
