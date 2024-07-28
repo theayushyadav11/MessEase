@@ -44,6 +44,9 @@ class UserDetails : Fragment() {
         addDetails()
 
 
+
+
+
     }
 
     fun initialize() {
