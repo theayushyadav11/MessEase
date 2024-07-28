@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/baseline_home_filled_24"
+            android:title="@string/menu_home" />
+        <item
+            android:visible="false"
+            android:id="@+id/nav_messCommitteeActivity"
+            android:icon="@drawable/baseline_people_alt_24"
+            android:title="@string/menu_gallery" />
+        <item
+            android:visible="false"
+            android:id="@+id/loggedin"
+            android:icon="@drawable/baseline_people_alt_24"
+            android:title="@string/menu_gallery" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_slideshow" />
+        <item
+            android:id="@+id/nav_admin"
+            android:icon="@drawable/baseline_admin_panel_settings_24"
+            android:title="Admin" />
+    </group>
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/baseline_logout_24"
+        android:title="logout"
+        android:orderInCategory="100" />
+
+</menu>

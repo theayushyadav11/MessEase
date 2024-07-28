@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.theayushyadav11.messease.fragments.HomeFragment"
+        android:label="Mess IIIT Lucknow"
+        tools:layout="@layout/fragment_home" />
+
+
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.theayushyadav11.messease.fragments.SlideshowFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow" />
+    <activity
+        android:id="@+id/nav_messCommitteeActivity"
+        android:name="com.theayushyadav11.messease.activities.MessCommitteeActivity"
+        android:label="activity_mess_committee"
+        tools:layout="@layout/activity_mess_committee" />
+    <activity
+        android:id="@+id/loggedin"
+        android:name="com.theayushyadav11.messease.activities.LoggedIn"
+        android:label="activity_logged_in"
+        tools:layout="@layout/activity_logged_in" />
+    <fragment
+        android:id="@+id/nav_admin"
+        android:name="com.theayushyadav11.messease.fragments.AdminFragment"
+        android:label="Admin"
+        tools:layout="@layout/fragment_admin" />
+</navigation>

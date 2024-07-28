@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/committee_nav_graph.xml"
+    app:startDestination="@id/mcMAin">
+
+    <fragment
+        android:id="@+id/mcMAin"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.McMAin"
+        android:label="fragment_mc_m_ain"
+        tools:layout="@layout/fragment_mc_main" >
+        <action
+            android:id="@+id/action_mcMAin_to_mcMenu"
+            app:destination="@id/mcMenu" />
+    </fragment>
+    <fragment
+        android:id="@+id/mcMenu"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.McMenu"
+        android:label="fragment_mc_menu"
+        tools:layout="@layout/fragment_mc_menu" >
+
+    </fragment>
+</navigation>

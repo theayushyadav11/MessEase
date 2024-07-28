@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mc"
+    app:startDestination="@id/mcMain2">
+
+    <fragment
+        android:id="@+id/mcMain2"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.McMAin"
+        android:label="McMAin" >
+        <action
+            android:id="@+id/action_mcMain2_to_mcMenu2"
+            app:destination="@id/mcMenu2" />
+        <action
+            android:id="@+id/action_mcMain2_to_createPoll"
+            app:destination="@id/createPoll" />
+    </fragment>
+    <fragment
+        android:id="@+id/mcMenu2"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.McMenu"
+        android:label="fragment_mc_menu"
+        tools:layout="@layout/fragment_mc_menu" />
+    <fragment
+        android:id="@+id/createPoll"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.CreatePoll"
+        android:label="fragment_create_poll"
+        tools:layout="@layout/fragment_create_poll" >
+        <action
+            android:id="@+id/action_createPoll_to_mcMain2"
+            app:destination="@id/mcMain2" />
+    </fragment>
+</navigation>

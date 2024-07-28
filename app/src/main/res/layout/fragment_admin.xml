@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menu"
+    >
+
+
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+
+
+        android:text="Add to mess committee"
+        android:textColor="@color/food"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:hint="Email"
+        app:boxStrokeWidth="2dp"
+        app:endIconMode="clear_text"
+        app:boxStrokeColor="@color/food"
+        app:helperTextTextColor="#FF0015"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="100dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:startIconDrawable="@drawable/baseline_attach_email_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:hint="Password"
+        app:boxStrokeColor="@color/food"
+        app:boxStrokeWidth="2dp"
+app:passwordToggleEnabled="true"
+        app:helperTextTextColor="#FF0015"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilEmail"
+
+        app:startIconDrawable="@drawable/baseline_lock_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:hint="Name"
+        app:boxStrokeWidth="2dp"
+        app:endIconMode="clear_text"
+        app:boxStrokeColor="@color/food"
+        app:helperTextTextColor="#FF0015"
+        app:layout_constraintEnd_toEndOf="parent"
+
+
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:startIconDrawable="@drawable/baseline_person_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/tilDesgination"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="25dp"-->
+<!--        android:hint="Designation"-->
+<!--        app:boxStrokeWidth="2dp"-->
+<!--        app:endIconMode="clear_text"-->
+<!--        app:boxStrokeColor="@color/food"-->
+<!--        app:helperTextTextColor="#FF0015"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+
+
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+
+<!--        app:layout_constraintTop_toBottomOf="@+id/tilName"-->
+<!--        app:startIconDrawable="@drawable/baseline_assured_workload_24">-->
+
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:id="@+id/etDesignation"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:inputType="textEmailAddress" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilspin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+       app:helperText="Designation"
+      app:helperTextTextColor="@color/food"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilName">
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:spinnerMode="dropdown" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+<!--    -->
+<!--    -->
+<!--    <Spinner-->
+<!--        android:id="@+id/spinner"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_marginHorizontal="25dp"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:background="#DFDFDF"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/btnAdd"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+
+
+<!--       app:layout_constraintStart_toStartOf="parent"-->
+
+<!--   app:layout_constraintTop_toBottomOf="@+id/tilName"/>-->
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAdd"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="40dp"
+        android:backgroundTint="@color/food"
+        android:text="Add"
+        android:textColor="@color/white"
+        app:cornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilspin" />
+    <!--    <com.google.android.gms.common.SignInButton-->
+    <!--        android:id="@+id/gsi"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="45dp"-->
+    <!--        android:layout_marginTop="25dp"-->
+    <!--        android:layout_marginHorizontal="35dp"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/btnLogin"-->
+    <!--        tools:layout_editor_absoluteX="25dp" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_login_sign_up"
+    app:startDestination="@id/loginInFragment">
+
+    <fragment
+        android:id="@+id/loginInFragment"
+        android:name="com.theayushyadav11.messease.fragments.LoginInFragment"
+        android:label="fragment_login_in"
+        tools:layout="@layout/fragment_login" >
+        <action
+            app:enterAnim="@anim/slide_in_right"
+            android:id="@+id/action_loginInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_loginInFragment_to_userDetails"
+            app:destination="@id/userDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.theayushyadav11.messease.fragments.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" >
+
+        <action
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            android:id="@+id/action_signUpFragment_to_otpFragment"
+            app:destination="@id/otpFragment" />
+        <action
+            app:enterAnim="@anim/slide_in_left"
+            android:id="@+id/action_signUpFragment_to_loginInFragment"
+            app:destination="@id/loginInFragment" />
+    </fragment>
+    <fragment
+
+        android:id="@+id/otpFragment"
+        android:name="com.theayushyadav11.messease.fragments.OtpFragment"
+        android:label="OtpFragment" />
+    <fragment
+        android:id="@+id/userDetails"
+        android:name="com.theayushyadav11.messease.fragments.UserDetails"
+        android:label="fragment_user_details"
+        tools:layout="@layout/fragment_user_details" />
+</navigation>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "937051587010",
+    "firebase_url": "https://messease-b3b3f-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "messease-b3b3f",
+    "storage_bucket": "messease-b3b3f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937051587010:android:be4d566d42a4cc346e965b",
+        "android_client_info": {
+          "package_name": "com.theayushyadav11.messease"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "937051587010-47tdqvci8rrhibdqed2end92uptrgaag.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theayushyadav11.messease",
+            "certificate_hash": "ec0d53d72c4fb109254a878baa2a17897c260cd3"
+          }
+        },
+        {
+          "client_id": "937051587010-d0b2voedijajcfskr1f9m735rka025v3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDayuNYHVXyon10YWXHlPnRkQqG7lZl29E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937051587010-d0b2voedijajcfskr1f9m735rka025v3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
