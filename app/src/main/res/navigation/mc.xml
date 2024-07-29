@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_mcMain2_to_createPoll"
             app:destination="@id/createPoll" />
+        <action
+            android:id="@+id/action_mcMain2_to_uploadMenuFragment"
+            app:destination="@id/uploadMenuFragment" />
     </fragment>
     <fragment
         android:id="@+id/mcMenu2"
@@ -30,4 +33,9 @@
             android:id="@+id/action_createPoll_to_mcMain2"
             app:destination="@id/mcMain2" />
     </fragment>
+    <fragment
+        android:id="@+id/uploadMenuFragment"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.UploadMenuFragment"
+        android:label="fragment_upload_menu"
+        tools:layout="@layout/fragment_upload_menu" />
 </navigation>

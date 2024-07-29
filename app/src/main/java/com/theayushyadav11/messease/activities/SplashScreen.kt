@@ -231,7 +231,7 @@ class SplashScreen : AppCompatActivity() {
         FirebaseDatabase.getInstance().reference.child("Users").child(auth.currentUser?.uid.toString()).child("details").addValueEventListener(object :
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.value==null) {
+                if(auth.currentUser!=null&&snapshot.value==null) {
                     val i =Intent(this@SplashScreen,LoginSignUp::class.java)
                     i.putExtra("ll",1)
                     startActivity(i)
