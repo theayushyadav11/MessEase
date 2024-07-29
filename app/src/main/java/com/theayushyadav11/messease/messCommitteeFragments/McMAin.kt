@@ -40,7 +40,7 @@ class McMAin : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMcMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -83,11 +83,12 @@ class McMAin : Fragment() {
         binding.editMenu.setOnClickListener {
            startActivity(Intent(requireContext(),MenuMaking::class.java))
         }
+
         binding.uploadMenu.setOnClickListener {
             mess.disign.observe(requireActivity(), Observer {
                 if(it.equals("Coordinator"))
                 {
-
+                    findNavController().navigate(R.id.action_mcMain2_to_uploadMenuFragment)
                 }
                 else
                 {

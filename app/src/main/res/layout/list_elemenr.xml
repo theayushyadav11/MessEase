@@ -63,7 +63,7 @@
 
                 android:text="TRENDING"
 
-                android:textColor="#FFFFFF"
+                android:textColor="@color/food"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 

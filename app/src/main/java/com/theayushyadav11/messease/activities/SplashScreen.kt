@@ -74,7 +74,8 @@ class SplashScreen : AppCompatActivity() {
 
 // Example DayMenu
         val dayMenu = DayMenu(
-            Monday = listOf(
+            listOf(
+            listOf(
                 Particulars("Breakfast", "Pav Bhaji ,Daliya,Milk. Tea Banana /Egg -Ipc Bread Butter", "8:30 A.M. to 10:00 A.M."),
                 Particulars("Lunch", "Chhola, Poori,Curd,Jeera Rice", "12:30 P.M. to 2:30 P.M."),
                 Particulars("Snacks", "Dry Maggie\n" +
@@ -83,7 +84,7 @@ class SplashScreen : AppCompatActivity() {
                         "Fry,Lauki\n" +
                         "masala,Roti,Rice", "7:30 P.M. to 9:30 P.M.")
             ),
-            Tuesday = listOf(
+             listOf(
                 Particulars("Breakfast", "Medu vada, coconut\n" +
                         "chutney, sambhar,\n" +
                         "milk, tea, Banana,\n" +
@@ -95,7 +96,7 @@ class SplashScreen : AppCompatActivity() {
                 Particulars("Dinner", "Aloo kurma,Veg\n" +
                         "pulao,Roti", "7:30 P.M. to 9:30 P.M.")
             ),
-            Wednesday  = listOf(
+           listOf(
                 Particulars("Breakfast", "Aloo paratha,\n" +
                         "curd, milk, tea,\n" +
                         "Banana/egg,\n" +
@@ -107,7 +108,7 @@ class SplashScreen : AppCompatActivity() {
                 Particulars("Dinner", "paneer butter\n" +
                         "jilebiDal makhani", "7:30 P.M. to 9:30 P.M.")
             ),
-            Thursday = listOf(
+        listOf(
                 Particulars("Breakfast", "poha,green\n" +
                         "chutney , Banana\n" +
                         "legg,Milk,Tea,Br\n" +
@@ -121,7 +122,7 @@ class SplashScreen : AppCompatActivity() {
                         "kofta,Rice,Roti,\n" +
                         "Dhaba dal", "7:30 P.M. to 9:30 P.M.")
             ),
-            Friday = listOf(
+             listOf(
                 Particulars("Breakfast", "Paratha, white\n" +
                         "matar sabji, Milk,\n" +
                         "Tea, Banana/egg,\n" +
@@ -134,7 +135,7 @@ class SplashScreen : AppCompatActivity() {
                         "Vegetable Tehri, roti,\n" +
                         "raita", "7:30 P.M. to 9:30 P.M.")
             ),
-            Saturday = listOf(
+          listOf(
                 Particulars("Breakfast", "Utappam, sambhar,\n" +
                         "coconut chutney,\n" +
                         "Milk, tea,\n" +
@@ -151,7 +152,7 @@ class SplashScreen : AppCompatActivity() {
                         "Dal Fry\n" +
                         "Roti, JeeraRice", "7:30 P.M. to 9:30 P.M.")
             ),
-            Sunday = listOf(
+            listOf(
                 Particulars("Breakfast", "Aloo Poori,\n" +
                         "I pc-Banana/\n" +
                         "Egg-I pc\n" +
@@ -170,7 +171,7 @@ class SplashScreen : AppCompatActivity() {
                         "Dal Tadka", "7:30 P.M. to 9:30 P.M.")
             ),
 
-            )
+            ))
         //        val textView: TextView = binding.textGallery
 //        galleryViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it

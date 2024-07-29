@@ -26,11 +26,11 @@ import java.util.Date
 class CreatePoll : Fragment() {
 
     private lateinit var binding: FragmentCreatePollBinding
-    var optionList:MutableList<EditText> = mutableListOf()
-    private lateinit var auth:FirebaseAuth
+    var optionList: MutableList<EditText> = mutableListOf()
+    private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
-    private lateinit var mess:Mess
-    private var scrollTo=1000
+    private lateinit var mess: Mess
+    private var scrollTo = 1000
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,18 +39,14 @@ class CreatePoll : Fragment() {
         listeners()
 
 
-
-
-
-
     }
 
     private fun initialise() {
         optionList.add(binding.opt0)
         optionList.add(binding.opt1)
-        auth=FirebaseAuth.getInstance()
-        database=FirebaseDatabase.getInstance().reference
-        mess=Mess(requireContext())
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance().reference
+        mess = Mess(requireContext())
     }
 
     override fun onCreateView(
@@ -62,25 +58,23 @@ class CreatePoll : Fragment() {
         return root
     }
 
-    fun listeners()
-    {
-        binding.ivBack.setOnClickListener{
-                findNavController().navigate(R.id.action_createPoll_to_mcMain2)
+    fun listeners() {
+        binding.ivBack.setOnClickListener {
+            findNavController().navigateUp()
         }
         addElements(binding.opt1)
-        binding.btnPost.setOnClickListener{
+        binding.btnPost.setOnClickListener {
 
-            var options:MutableSet<String> = mutableSetOf()
+            var options: MutableSet<String> = mutableSetOf()
 
 
 
-            for(i in optionList)
-            {
+            for (i in optionList) {
 
-                if(i.text.toString().isNotEmpty())
-               options.add(i.text.toString()+"\n")
+                if (i.text.toString().isNotEmpty())
+                    options.add(i.text.toString() + "\n")
             }
-            val poll=Poll(
+            val poll = Poll(
                 database.push().key.toString(),
                 auth.currentUser?.displayName.toString(),
                 binding.tvQuestion.text.toString(),
@@ -91,67 +85,70 @@ class CreatePoll : Fragment() {
                 options.toMutableList(),
 
 
-            )
-           addPoll(poll)
+                )
+            addPoll(poll)
         }
 
 
     }
 
-fun addElements(edit:EditText)
-{
-    edit.addTextChangedListener(object : TextWatcher{
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+    fun addElements(edit: EditText) {
+        edit.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-           if(s?.length!! <2)
-           {
-               scrollTo+=50
-               val adding=LayoutInflater.from(requireContext()).inflate(R.layout.poll_elements,binding.adder,false)
-               val et:EditText=adding.findViewById<EditText>(R.id.opt)
-               optionList.add(et)
-               addElements(et)
-               binding.adder.addView(adding)
-               binding.scroll.scrollTo(0,scrollTo)
-
-           }
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
-    })
-}
-    fun addPoll(poll:Poll)
-    {
-        mess.addPb("Adding poll..")
-        val key=poll.uid
-        database.child("polls").child(key).setValue(poll).addOnCompleteListener {
-            if(it.isSuccessful)
-            {
-                mess.toast("Poll added Successfully.")
-                addToUser(key)
-                findNavController().navigate(R.id.action_createPoll_to_mcMain2)
-            }
-            else
-            {
-                mess.toast("failed to add poll!")
             }
 
-            mess.pbDismiss()
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s?.length!! < 2) {
+                    scrollTo += 50
+                    val adding = LayoutInflater.from(requireContext())
+                        .inflate(R.layout.poll_elements, binding.adder, false)
+                    val et: EditText = adding.findViewById<EditText>(R.id.opt)
+                    optionList.add(et)
+                    addElements(et)
+                    binding.adder.addView(adding)
+                    binding.scroll.scrollTo(0, scrollTo)
+
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+    }
+
+    fun addPoll(poll: Poll) {
+
+        val key = poll.uid
+        if (poll.question.isNotEmpty() && poll.options.size > 0) {
+            mess.addPb("Adding poll..")
+            database.child("polls").child(key).setValue(poll).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    mess.toast("Poll added Successfully.")
+                    addToUser(key)
+                    findNavController().navigate(R.id.action_createPoll_to_mcMain2)
+                } else {
+                    mess.toast("failed to add poll!")
+                }
+
+                mess.pbDismiss()
+            }
+        } else {
+            mess.toast("Cannot add Empty feilds!")
         }
     }
- fun addToUser(key:String)
- {
-     database.child("Users").child(auth.currentUser?.uid.toString()).child("polls").push().setValue(key)
-         .addOnCompleteListener {
 
-         }
-     PollsFragment()
- }
+    fun addToUser(key: String) {
+        database.child("Users").child(auth.currentUser?.uid.toString()).child("polls").push()
+            .setValue(key)
+            .addOnCompleteListener {
+
+            }
+        PollsFragment()
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun getCurrentDateTime(): String {
         val current = LocalDateTime.now()

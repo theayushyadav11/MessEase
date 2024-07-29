@@ -6,5 +6,5 @@ import androidx.room.PrimaryKey
 data class Menu(
     @PrimaryKey
     val id: String,
-    val menu:DayMenu
+    val menu:DayMenu = DayMenu()
 )

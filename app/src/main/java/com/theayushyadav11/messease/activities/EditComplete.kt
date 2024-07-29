@@ -14,11 +14,13 @@ import com.google.firebase.database.FirebaseDatabase
 import com.theayushyadav11.messease.databinding.ActivityEditCompleteBinding
 import com.theayushyadav11.messease.models.AprMenu
 import com.theayushyadav11.messease.utils.Mess
+import com.theayushyadav11.messease.viewModels.Menu2
 import com.theayushyadav11.myapplication.database.MenuDatabase
 import com.theayushyadav11.myapplication.models.Menu
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.Date
 
 class EditComplete : AppCompatActivity() {
     private lateinit var binding: ActivityEditCompleteBinding
@@ -75,10 +77,15 @@ class EditComplete : AppCompatActivity() {
         val roomDatabase = MenuDatabase.getDatabase(this).menuDao()
         lifecycleScope.launch(Dispatchers.IO) {
             editedMenu = roomDatabase.getEditedMenu()
+
             mess.log(editedMenu)
+            val key=FirebaseDatabase.getInstance().reference.push().key.toString()
             val aprMenu =
-                AprMenu(FirebaseAuth.getInstance().currentUser?.uid.toString(), editedMenu)
-            FirebaseDatabase.getInstance().reference.child("forApproval").push().setValue(aprMenu)
+                AprMenu(key,FirebaseAuth.getInstance().currentUser?.uid.toString(), date = Date(),
+                    menu = Menu2(editedMenu.id,editedMenu.menu)
+                )
+
+            FirebaseDatabase.getInstance().reference.child("forApproval").child(key).setValue(aprMenu)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         mess.toast("Menu send for approval.")
@@ -90,8 +97,5 @@ class EditComplete : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, MenuMaking::class.java))
-    }
+
 }

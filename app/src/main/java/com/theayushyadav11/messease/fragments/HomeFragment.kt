@@ -376,18 +376,21 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
 
     fun getMenu(menu: Menu, day: Int): MutableList<Particulars> {
         return when (day) {
-            Calendar.MONDAY -> menu.menu.Monday.toMutableList()
-            Calendar.TUESDAY -> menu.menu.Tuesday.toMutableList()
-            Calendar.WEDNESDAY -> menu.menu.Wednesday.toMutableList()
-            Calendar.THURSDAY -> menu.menu.Thursday.toMutableList()
-            Calendar.FRIDAY -> menu.menu.Friday.toMutableList()
-            Calendar.SATURDAY -> menu.menu.Saturday.toMutableList()
-            Calendar.SUNDAY -> menu.menu.Sunday.toMutableList()
+            Calendar.MONDAY -> menu.menu.list[0].toMutableList()
+            Calendar.TUESDAY -> menu.menu.list[1].toMutableList()
+            Calendar.WEDNESDAY -> menu.menu.list[2].toMutableList()
+            Calendar.THURSDAY -> menu.menu.list[3].toMutableList()
+            Calendar.FRIDAY -> menu.menu.list[4].toMutableList()
+            Calendar.SATURDAY -> menu.menu.list[5].toMutableList()
+            Calendar.SUNDAY -> menu.menu.list[6].toMutableList()
+
+
             else -> mutableListOf()
         }
     }
 
     fun optionSelect(uid: String, option:String) {
+
         database.child("pollResult").child(uid).child(auth.currentUser?.uid.toString())
             .setValue(option)
         database.child("pollResult").child(uid).child(auth.currentUser?.uid.toString())

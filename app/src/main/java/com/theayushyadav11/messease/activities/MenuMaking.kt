@@ -265,13 +265,13 @@ class MenuMaking : AppCompatActivity() {
 
     private fun updateUi(menu: Menu) {
         val dd: List<List<Particulars>> = listOf(
-            menu.menu.Monday,
-            menu.menu.Tuesday,
-            menu.menu.Wednesday,
-            menu.menu.Thursday,
-            menu.menu.Friday,
-            menu.menu.Saturday,
-            menu.menu.Sunday
+            menu.menu.list[0],
+            menu.menu.list[1],
+            menu.menu.list[2],
+            menu.menu.list[3],
+            menu.menu.list[4],
+            menu.menu.list[5],
+            menu.menu.list[6],
         )
         for (i in 0 until texts.size) {
             for (j in 0 until texts[i].size) {
@@ -289,13 +289,14 @@ class MenuMaking : AppCompatActivity() {
 
     fun getEditedMenu(menu: Menu): Menu {
         val dd: List<List<Particulars>> = listOf(
-            menu.menu.Monday,
-            menu.menu.Tuesday,
-            menu.menu.Wednesday,
-            menu.menu.Thursday,
-            menu.menu.Friday,
-            menu.menu.Saturday,
-            menu.menu.Sunday
+            menu.menu.list[0],
+            menu.menu.list[1],
+            menu.menu.list[2],
+            menu.menu.list[3],
+            menu.menu.list[4],
+            menu.menu.list[5],
+            menu.menu.list[6],
+
         )
         var editedMenu: Menu
         var dayMenu: MutableList<MutableList<Particulars>> = mutableListOf()
@@ -319,7 +320,7 @@ class MenuMaking : AppCompatActivity() {
             dayMenu.add(list)
             mess.log("space")
         }
-        editedMenu = Menu("edited", DayMenu(dayMenu[0], dayMenu[1], dayMenu[2], dayMenu[3], dayMenu[4], dayMenu[5], dayMenu[6]))
+        editedMenu = Menu("edited", DayMenu(listOf( dayMenu[0], dayMenu[1], dayMenu[2], dayMenu[3], dayMenu[4], dayMenu[5], dayMenu[6])))
 
 
         return editedMenu

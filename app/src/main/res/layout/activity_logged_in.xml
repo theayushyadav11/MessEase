@@ -10,7 +10,6 @@
 
 
     <fragment
-        android:layout_marginTop="25dp"
         android:id="@+id/mchost"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"

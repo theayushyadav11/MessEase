@@ -1,5 +1,7 @@
 package com.theayushyadav11.messease.viewModels
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +11,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.theayushyadav11.messease.models.AprMenu
+import com.theayushyadav11.myapplication.models.DayMenu
 
 class UploadMenuViewModel : ViewModel() {
     val auth=FirebaseAuth.getInstance()
@@ -26,8 +29,9 @@ class UploadMenuViewModel : ViewModel() {
                     val aprMenuList:MutableList<AprMenu> = mutableListOf()
                     for(child in snapshot.children)
                     {
-                        val aprMenu=child.getValue(AprMenu::class.java)
-                        aprMenu?.let { aprMenuList.add(aprMenu) }
+                        Log.d(TAG, child.value.toString())
+                       val aprMenu=child.getValue(AprMenu::class.java)
+                     aprMenu?.let { aprMenuList.add(aprMenu) }
                     }
                     _menuList.value=aprMenuList
                 }
@@ -38,5 +42,13 @@ class UploadMenuViewModel : ViewModel() {
 
             })
     }
+ fun deleteApprove(key:String)
+    {
+        database.child("forApproval").child(key).removeValue()
+    }
 
 }
+data class Menu2(
+    val id:String="",
+    val menu:DayMenu= DayMenu()
+)

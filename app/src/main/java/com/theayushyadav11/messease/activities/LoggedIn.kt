@@ -29,7 +29,6 @@ class LoggedIn : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityLoggedInBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initialise()

@@ -45,16 +45,5 @@ class HomeViewModel() : ViewModel() {
         return calendar.get(Calendar.DAY_OF_WEEK)
     }
 
-    private fun getMenu(day: Int): MutableList<Particulars> {
-        return when (day) {
-            Calendar.MONDAY -> menu.menu.Monday.toMutableList()
-            Calendar.TUESDAY -> menu.menu.Tuesday.toMutableList()
-            Calendar.WEDNESDAY -> menu.menu.Wednesday.toMutableList()
-            Calendar.THURSDAY -> menu.menu.Thursday.toMutableList()
-            Calendar.FRIDAY -> menu.menu.Friday.toMutableList()
-            Calendar.SATURDAY -> menu.menu.Saturday.toMutableList()
-            Calendar.SUNDAY -> menu.menu.Sunday.toMutableList()
-            else -> mutableListOf()
-        }
-    }
+
 }
