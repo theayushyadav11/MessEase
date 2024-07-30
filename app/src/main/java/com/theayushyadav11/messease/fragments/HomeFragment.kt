@@ -54,12 +54,9 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
     var dayOfWeek = MutableLiveData<Int>()
     private lateinit var mess: Mess
     private lateinit var list: MutableList<Particulars>
-
     private var day = Date().date
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
-
-
     lateinit var homeViewModel: HomeViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -109,6 +106,14 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         val layoutManager = binding.rv.layoutManager as LinearLayoutManager
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
         val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+        if(firstVisibleItemPosition>6)
+        {
+            binding.imageView2.visibility = View.VISIBLE
+        }
+        if(lastVisibleItemPosition<24)
+        {
+            binding.imageView.visibility = View.VISIBLE
+        }
 
         if (direction == -1) { // Scroll left
             if (firstVisibleItemPosition > 4) {
