@@ -146,7 +146,7 @@ class CreatePoll : Fragment() {
             .addOnCompleteListener {
 
             }
-        PollsFragment()
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

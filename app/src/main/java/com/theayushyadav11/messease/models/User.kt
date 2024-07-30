@@ -14,7 +14,9 @@ data class User(
 )
 data class AprMenu(
     val id: String="",
+    val note: String = "",
     val creater: String = "",
     val menu: Menu2? = null,
     val date: Date =Date()
+
 )

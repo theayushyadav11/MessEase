@@ -17,6 +17,7 @@ class UploadMenuViewModel : ViewModel() {
     val auth=FirebaseAuth.getInstance()
     val database=FirebaseDatabase.getInstance().reference
     private val _menuList = MutableLiveData<List<AprMenu>>()
+    val t=MutableLiveData<String>()
     val menuList: LiveData<List<AprMenu>> get() = _menuList
 
     init {
@@ -32,6 +33,7 @@ class UploadMenuViewModel : ViewModel() {
                         Log.d(TAG, child.value.toString())
                        val aprMenu=child.getValue(AprMenu::class.java)
                      aprMenu?.let { aprMenuList.add(aprMenu) }
+                        aprMenuList.sortByDescending { it.date }
                     }
                     _menuList.value=aprMenuList
                 }
@@ -44,7 +46,29 @@ class UploadMenuViewModel : ViewModel() {
     }
  fun deleteApprove(key:String)
     {
-        database.child("forApproval").child(key).removeValue()
+        database.child("forApproval").child(key).removeValue().addOnCompleteListener {
+            if(it.isSuccessful)
+            {
+                t.value="Menu removed successfully"
+            }
+            else
+            {
+                t.value=it.exception?.message
+            }
+        }
+    }
+    fun uploadMainMenu(menu:Menu2)
+    {
+        database.child("MainMenu").setValue(menu).addOnCompleteListener {
+            if(it.isSuccessful)
+            {
+                t.value="Menu uploaded successfully"
+            }
+            else
+            {
+                t.value=it.exception?.message
+            }
+        }
     }
 
 }

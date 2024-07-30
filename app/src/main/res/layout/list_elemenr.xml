@@ -11,10 +11,10 @@
     android:layout_marginHorizontal="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:strokeWidth="2dp"
     app:strokeColor="@color/food"
     android:elevation="0dp"
-    app:cardCornerRadius="20dp">
+    app:strokeWidth="2dp"
+    app:cardCornerRadius="12dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -31,14 +31,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/foodType"
+            android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:gravity="center_vertical"
             android:paddingStart="13dp"
 
             android:textColor="@color/food"
-            android:textSize="27dp"
+            android:textSize="22dp"
             android:textStyle="bold"
 
             app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
@@ -46,7 +46,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/foodMenu"
+            android:id="@+id/other"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingStart="13dp"
@@ -56,7 +56,7 @@
             android:layout_marginVertical="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view3"
-            app:layout_constraintTop_toBottomOf="@+id/foodType" />
+            app:layout_constraintTop_toBottomOf="@+id/name" />
 
         <ImageView
             android:id="@+id/imageView4"
@@ -67,7 +67,7 @@
             android:src="@drawable/baseline_access_time_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view3"
-            app:layout_constraintTop_toBottomOf="@+id/foodMenu" />
+            app:layout_constraintTop_toBottomOf="@+id/other" />
 
         <TextView
             android:id="@+id/foodTimeing"
@@ -82,7 +82,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
 
             app:layout_constraintStart_toEndOf="@+id/imageView4"
-            app:layout_constraintTop_toBottomOf="@+id/foodMenu" />
+            app:layout_constraintTop_toBottomOf="@+id/other" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -95,6 +95,7 @@
             >
             <ImageView
                 android:padding="10dp"
+                android:background="@drawable/ripple"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/baseline_file_open_24"
@@ -109,10 +110,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:orientation="horizontal">
             <ImageView
+                android:background="@drawable/ripple"
                 android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/baseline_delete_24"
+                android:src="@drawable/baseline_delete_24menu"/>
 
         </LinearLayout>
 

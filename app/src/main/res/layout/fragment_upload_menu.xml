@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".messCommitteeFragments.UploadMenuFragment">
 <LinearLayout
-    android:layout_margin="-20dp"
+
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:background="@color/food"
@@ -33,6 +33,7 @@
 
 
  <ScrollView
+     android:layout_marginTop="20dp"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:scrollbars="none"
@@ -44,13 +45,23 @@
              app:layout_constraintTop_toTopOf="parent"
              app:layout_constraintStart_toStartOf="parent"
              android:id="@+id/adder"
-             android:layout_margin="25dp"
+             android:layout_margin="15dp"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:orientation="vertical"
          >
 
          </LinearLayout>
+         <TextView
+             android:visibility="gone"
+             android:id="@+id/message"
+             app:layout_constraintTop_toBottomOf="@id/adder"
+             android:layout_width="match_parent"
+             android:layout_height="300dp"
+             android:gravity="center"
+             android:textColor="@color/food"
+             android:text="No Menu present"
+             android:textSize="35sp"/>
 
      </androidx.constraintlayout.widget.ConstraintLayout>
  </ScrollView>

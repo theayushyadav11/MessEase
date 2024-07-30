@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -40,6 +41,7 @@ class UploadMenuFragment : Fragment() {
         initialize()
         listener()
         check()
+        toast()
 
     }
 
@@ -63,11 +65,20 @@ class UploadMenuFragment : Fragment() {
 
     fun set(menuList: List<AprMenu>) {
         binding.adder.removeAllViews()
+        if(menuList.size==0)
+        {
+            binding.message.isVisible=true
+        }
+        else
+        {
+            binding.message.isVisible=false
+        }
         for (menuDetail in menuList) {
             val view = LayoutInflater.from(requireContext())
                 .inflate(R.layout.list_elemenr, binding.adder, false)
-            view.findViewById<TextView>(R.id.Head).text = menuDetail.creater
-            view.findViewById<LinearLayout>(R.id.delete).setOnClickListener {
+            view.findViewById<TextView>(R.id.name).text = menuDetail.creater
+            view.findViewById<TextView>(R.id.other).text = menuDetail.note
+            view.findViewById<LinearLayout>(R.id.linearLayout3).setOnClickListener {
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Alert!")
                 builder.setCancelable(false)
@@ -82,9 +93,37 @@ class UploadMenuFragment : Fragment() {
                 builder.show()
 
             }
-            view.findViewById<TextView>(R.id.test).text = menuDetail.date.date.toString()
+            val dateTime=""+menuDetail.date.hours+":"+menuDetail.date.minutes+"   "+menuDetail.date.date+"/"+menuDetail.date.month+"/"+(menuDetail.date.year+1900)
+            view.findViewById<TextView>(R.id.foodTimeing).text = dateTime
+            view.findViewById<LinearLayout>(R.id.linearLayout2).setOnClickListener{
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Alert!")
+                builder.setCancelable(false)
+                builder.setMessage("Are you sure you want upload a new Menu?")
+                builder.setPositiveButton("Yes") { dialog, which ->
+                    menuDetail.menu?.let { it1 -> viewModel.uploadMainMenu(it1) }
+                    viewModel.deleteApprove(menuDetail.id)
+                    dialog.dismiss()
+                }
+                builder.setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                builder.show()
+
+            }
+
+
+
+
+
             binding.adder.addView(view)
 
+        }
+    }
+    fun toast()
+    {
+        viewModel.t.observe(viewLifecycleOwner){
+            mess.toast(it)
         }
     }
 

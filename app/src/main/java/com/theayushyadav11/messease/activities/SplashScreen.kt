@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.theayushyadav11.messease.R
+import com.theayushyadav11.messease.viewModels.Menu2
 import com.theayushyadav11.myapplication.database.MenuDatabase
 import com.theayushyadav11.myapplication.models.DayMenu
 import com.theayushyadav11.myapplication.models.Menu
@@ -71,123 +72,23 @@ class SplashScreen : AppCompatActivity() {
     {
         val db = MenuDatabase.getDatabase(this)
         val menuDao = db.menuDao()
+          FirebaseDatabase.getInstance().reference.child("MainMenu").addValueEventListener(object :ValueEventListener{
+              override fun onDataChange(snapshot: DataSnapshot) {
+                   val m=snapshot.getValue(Menu2::class.java)
+                  val menu= m?.let { Menu2(id="1", menu = it.menu,) }
+                  GlobalScope.launch {
+                      if (menu != null) {
+                          menuDao.addMenu(Menu(id=menu.id, menu=menu.menu))
+                      }
+                  }
+                  }
 
-// Example DayMenu
-        val dayMenu = DayMenu(
-            listOf(
-            listOf(
-                Particulars("Breakfast", "Pav Bhaji ,Daliya,Milk. Tea Banana /Egg -Ipc Bread Butter", "8:30 A.M. to 10:00 A.M."),
-                Particulars("Lunch", "Chhola, Poori,Curd,Jeera Rice", "12:30 P.M. to 2:30 P.M."),
-                Particulars("Snacks", "Dry Maggie\n" +
-                        "Tea", "5:00 P.M. to 6:00 P.M."),
-                Particulars("Dinner", "Masoor Dal\n" +
-                        "Fry,Lauki\n" +
-                        "masala,Roti,Rice", "7:30 P.M. to 9:30 P.M.")
-            ),
-             listOf(
-                Particulars("Breakfast", "Medu vada, coconut\n" +
-                        "chutney, sambhar,\n" +
-                        "milk, tea, Banana,\n" +
-                        "Bread, butter/jam", "8:30 A.M. to 10:00 A.M."),
-                Particulars("Lunch", "Rajma Masala,\n" +
-                        "Onion Raita, Roti,\n" +
-                        "Jeera Rice", "12:30 P.M. to 2:30 P.M."),
-                Particulars("Snacks", "Macaroni, Tea", "5:00 P.M. to 6:00 P.M."),
-                Particulars("Dinner", "Aloo kurma,Veg\n" +
-                        "pulao,Roti", "7:30 P.M. to 9:30 P.M.")
-            ),
-           listOf(
-                Particulars("Breakfast", "Aloo paratha,\n" +
-                        "curd, milk, tea,\n" +
-                        "Banana/egg,\n" +
-                        "Bread, Butter/jam", "8:30 A.M. to 10:00 A.M."),
-                Particulars("Lunch", "Roti, Rice, Black chana\n" +
-                        "masala,aloo cabbage\n" +
-                        "matar", "12:30 P.M. to 2:30 P.M."),
-                Particulars("Snacks", "Chilly Idli,Tea", "5:00 P.M. to 6:00 P.M."),
-                Particulars("Dinner", "paneer butter\n" +
-                        "jilebiDal makhani", "7:30 P.M. to 9:30 P.M.")
-            ),
-        listOf(
-                Particulars("Breakfast", "poha,green\n" +
-                        "chutney , Banana\n" +
-                        "legg,Milk,Tea,Br\n" +
-                        "ead,Butteer/Jam", "8:30 A.M. to 10:00 A.M."),
-                Particulars("Lunch", "Crunchy Jeera Aloo\n" +
-                        "Kadhi Pyaaz Pakora\n" +
-                        "Roti, Rice", "12:30 P.M. to 2:30 P.M."),
-                Particulars("Snacks", "Chole Samosa,\n" +
-                        "Tea", "5:00 P.M. to 6:00 P.M."),
-                Particulars("Dinner", "pyaaz\n" +
-                        "kofta,Rice,Roti,\n" +
-                        "Dhaba dal", "7:30 P.M. to 9:30 P.M.")
-            ),
-             listOf(
-                Particulars("Breakfast", "Paratha, white\n" +
-                        "matar sabji, Milk,\n" +
-                        "Tea, Banana/egg,\n" +
-                        "Bread, butter/jam", "8:30 A.M. to 10:00 A.M."),
-                Particulars("Lunch", "Bhindi Fry,Masoor dal Fry,\n" +
-                        "Roti,Rice", "12:30 P.M. to 2:30 P.M."),
-                Particulars("Snacks", "Peri peri fries,\n" +
-                        "ketchup, tea", "5:00 P.M. to 6:00 P.M."),
-                Particulars("Dinner", "Aloo tomato,\n" +
-                        "Vegetable Tehri, roti,\n" +
-                        "raita", "7:30 P.M. to 9:30 P.M.")
-            ),
-          listOf(
-                Particulars("Breakfast", "Utappam, sambhar,\n" +
-                        "coconut chutney,\n" +
-                        "Milk, tea,\n" +
-                        "banana/egg, Bread,\n" +
-                        "butter/jam", "8:30 A.M. to 10:00 A.M."),
-                Particulars("Lunch", "Pindi Choley\n" +
-                        "Bathure\n" +
-                        "Rice\n" +
-                        "Boondi Raita", "12:30 P.M. to 2:30 P.M."),
-                Particulars("Snacks", "Biscuits(5pc),\n" +
-                        "Tea", "5:00 P.M. to 6:00 P.M."),
-                Particulars("Dinner", "Veg\n" +
-                        "Jalfrezi,Arhar\n" +
-                        "Dal Fry\n" +
-                        "Roti, JeeraRice", "7:30 P.M. to 9:30 P.M.")
-            ),
-            listOf(
-                Particulars("Breakfast", "Aloo Poori,\n" +
-                        "I pc-Banana/\n" +
-                        "Egg-I pc\n" +
-                        "bread\n" +
-                        "Butter jam", "8:30 A.M. to 10:00 A.M."),
-                Particulars("Lunch", "Vegetable Biryani Dal\n" +
-                        "Makhani Tawa Paratha,\n" +
-                        "Raita", "12:30 P.M. to 2:30 P.M."),
-                Particulars("Snacks", "Punugulu, Toma\n" +
-                        "to Chutney,\n" +
-                        "Tea", "5:00 P.M. to 6:00 P.M."),
-                Particulars("Dinner", "Gulab Jamun/lce\n" +
-                        "cream,Jeera\n" +
-                        "Rice, Roti,Kadai\n" +
-                        "Paneer,Punjabi\n" +
-                        "Dal Tadka", "7:30 P.M. to 9:30 P.M.")
-            ),
+              override fun onCancelled(error: DatabaseError) {
 
-            ))
-        //        val textView: TextView = binding.textGallery
-//        galleryViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
+              }
 
-// Create a Menu object
-        val menu = Menu(id = "1", menu = dayMenu)
+          })
 
-// Insert the menu into the database
-        GlobalScope.launch {
-            menuDao.addMenu(menu)
-
-            // Retrieve the menu from the database
-            val retrievedMenu = menuDao.getMenu()
-            Log.d("Menu", retrievedMenu.toString())
-        }
 
     }
 
