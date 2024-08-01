@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener
 import com.theayushyadav11.messease.databinding.ActivityEditCompleteBinding
 import com.theayushyadav11.messease.databinding.EditDialogBinding
 import com.theayushyadav11.messease.models.AprMenu
+import com.theayushyadav11.messease.utils.FireBase
 import com.theayushyadav11.messease.utils.Mess
 import com.theayushyadav11.messease.viewModels.Menu2
 import com.theayushyadav11.myapplication.database.MenuDatabase
@@ -39,6 +40,7 @@ class EditComplete : AppCompatActivity() {
     private lateinit var binding: ActivityEditCompleteBinding
     private lateinit var mess: Mess
     private lateinit var editedMenu: Menu
+    private lateinit var uri: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,28 +51,30 @@ class EditComplete : AppCompatActivity() {
     }
     fun initialise() {
         mess = Mess(this)
-    }
-    fun listener() {
-        binding.button.setOnClickListener {
-            openPDF()
-        }
-        binding.send.setOnClickListener {
-         showInputDialog()
-        }
-        binding.imageView5.setOnClickListener {
-            onBackPressed()
-        }
-    }
-
-    private fun openPDF() {
         val fileName = "Mess Menu.pdf"
         val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
         if (file.exists()) {
-            val uri: Uri = FileProvider.getUriForFile(
+            uri = FileProvider.getUriForFile(
                 this,
                 "com.theayushyadav11.messease.provider",
                 file
             )
+        }}
+        fun listener() {
+            binding.button.setOnClickListener {
+                openPDF()
+            }
+            binding.send.setOnClickListener {
+                showInputDialog()
+            }
+            binding.imageView5.setOnClickListener {
+                onBackPressed()
+            }
+        }
+
+        fun openPDF() {
+
+
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setDataAndType(uri, "application/pdf")
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -80,81 +84,113 @@ class EditComplete : AppCompatActivity() {
                 Log.d("PDF", e.toString())
                 Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
             }
-        } else {
-            Toast.makeText(this, "File not found", Toast.LENGTH_SHORT).show()
+
         }
-    }
 
-    fun sendToCorrdi(note:String,creater:String) {
-        mess.addPb("Sending...")
-        val roomDatabase = MenuDatabase.getDatabase(this).menuDao()
-        lifecycleScope.launch(Dispatchers.IO) {
-            editedMenu = roomDatabase.getEditedMenu()
+        fun sendToCorrdi(note: String, creater: String) {
+            mess.addPb("Sending...")
+            val key = FirebaseDatabase.getInstance().reference.push().key.toString()
+            FireBase().uploadPdfToFirebase(uri,key, onSuccess ={pdfurl->
 
-            mess.log(editedMenu)
-            val key=FirebaseDatabase.getInstance().reference.push().key.toString()
-            val aprMenu =
-                AprMenu(key,note,creater, date = Date(),
-                    menu = Menu2(editedMenu.id,editedMenu.menu)
-                )
+                val roomDatabase = MenuDatabase.getDatabase(this).menuDao()
+                lifecycleScope.launch(Dispatchers.IO) {
+                    editedMenu = roomDatabase.getEditedMenu()
 
-            FirebaseDatabase.getInstance().reference.child("forApproval").child(key).setValue(aprMenu)
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        mess.toast("Menu send for approval.")
-                        GlobalScope.launch(Dispatchers.IO) {
-                            val databse=MenuDatabase.getDatabase(this@EditComplete).menuDao()
-                            databse.addMenu(editedMenu)
+                    mess.log(editedMenu)
+
+                    val aprMenu =
+                        AprMenu(
+                            key, note,url=pdfurl, creater, date = Date(),
+                            menu = Menu2(editedMenu.id, editedMenu.menu), displayDate = mess.getCurrentTimeAndDate()
+                        )
+
+                    FirebaseDatabase.getInstance().reference.child("forApproval").child(key)
+                        .setValue(aprMenu)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                mess.toast("Menu send for approval.")
+                                GlobalScope.launch(Dispatchers.IO) {
+                                    val databse = MenuDatabase.getDatabase(this@EditComplete).menuDao()
+                                    databse.addMenu(editedMenu)
+                                }
+                            } else {
+                                mess.toast(it.exception?.message.toString())
+                            }
+
                         }
-                    } else {
-                        mess.toast(it.exception?.message.toString())
-                    }
-                    mess.pbDismiss()
+
+
                 }
+
+
+
+
+mess.pbDismiss()
+            },
+                onFailure ={exception ->
+
+              mess.toast(exception.message.toString())
+                    mess.pbDismiss()
+
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
-    }
 
-    private fun showInputDialog() {
-        val dialog = Dialog(this)
-        val bind = EditDialogBinding.inflate(layoutInflater)
+        fun showInputDialog() {
+            val dialog = Dialog(this)
+            val bind = EditDialogBinding.inflate(layoutInflater)
 
-        dialog.setContentView(bind.root)
-        dialog.setCancelable(false)
-        dialog.show()
-        bind.textInputLayout3.hint="Add Note"
-        bind.cancel.setOnClickListener {
-            dialog.dismiss()
-        }
-        bind.done.setOnClickListener {
-            if (bind.etUpdate.text.toString().trim().isNotEmpty()) {
-                FirebaseDatabase.getInstance().reference.child("Users").child(FirebaseAuth.getInstance().currentUser?.uid.toString()).child("details").addValueEventListener(object :ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
+            dialog.setContentView(bind.root)
+            dialog.setCancelable(false)
+            dialog.show()
+            bind.textInputLayout3.hint = "Add Note"
+            bind.cancel.setOnClickListener {
+                dialog.dismiss()
+            }
+            bind.done.setOnClickListener {
+                if (bind.etUpdate.text.toString().trim().isNotEmpty()) {
+                    FirebaseDatabase.getInstance().reference.child("Users")
+                        .child(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                        .child("details").addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
 
-                        var name=""
-                        var year=""
-                        for(i in snapshot.children)
-                        {
-                            Log.d("pranilash",i.toString())
-                            if(i.key=="name")
-                                name=i.value.toString()
-                            if(i.key=="passYear")
-                                year=i.value.toString()
+                            var name = ""
+                            var year = ""
+                            for (i in snapshot.children) {
+                                Log.d("pranilash", i.toString())
+                                if (i.key == "name")
+                                    name = i.value.toString()
+                                if (i.key == "passYear")
+                                    year = i.value.toString()
+                            }
+
+                            sendToCorrdi(bind.etUpdate.text.toString().trim(), "$name \n $year")
+
+                            dialog.dismiss()
                         }
 
-                        sendToCorrdi(bind.etUpdate.text.toString().trim(),"$name \n $year")
+                        override fun onCancelled(error: DatabaseError) {
 
-                        dialog.dismiss()
-                    }
+                        }
 
-                    override fun onCancelled(error: DatabaseError) {
+                    })
 
-                    }
-
-                })
-
-            } else {
-                mess.toast("Cannot add empty item.")
+                } else {
+                    mess.toast("Cannot add empty item.")
+                }
             }
         }
     }
-}

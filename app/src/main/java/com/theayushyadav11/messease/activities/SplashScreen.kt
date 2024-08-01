@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.theayushyadav11.messease.R
+import com.theayushyadav11.messease.utils.Mess
 import com.theayushyadav11.messease.viewModels.Menu2
 import com.theayushyadav11.myapplication.database.MenuDatabase
 import com.theayushyadav11.myapplication.models.DayMenu
@@ -84,7 +85,7 @@ class SplashScreen : AppCompatActivity() {
                   }
 
               override fun onCancelled(error: DatabaseError) {
-
+navigate()
               }
 
           })
@@ -146,7 +147,7 @@ class SplashScreen : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+              Mess(this@SplashScreen).toast("Network error!")
             }
 
         })

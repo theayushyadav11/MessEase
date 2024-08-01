@@ -1,5 +1,7 @@
 package com.theayushyadav11.messease.messCommitteeFragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.FragmentUploadMenuBinding
 import com.theayushyadav11.messease.models.AprMenu
+import com.theayushyadav11.messease.utils.FireBase
 import com.theayushyadav11.messease.utils.Mess
 import com.theayushyadav11.messease.viewModels.UploadMenuViewModel
 
@@ -85,6 +89,13 @@ class UploadMenuFragment : Fragment() {
                 builder.setMessage("Are you sure you want to delete? \n This cannot be undone!.")
                 builder.setPositiveButton("Ok") { dialog, which ->
                     viewModel.deleteApprove(menuDetail.id)
+                    FireBase().deletePdfFromFirebase(menuDetail.url, onSuccess = {
+                        mess.toast("Deleted successfully")
+                    }, onFailure = {
+                        mess.toast("Failed to delete menu")
+                    })
+
+
                     dialog.dismiss()
                 }
                 builder.setNegativeButton("Cancel") { dialog, _ ->
@@ -93,7 +104,8 @@ class UploadMenuFragment : Fragment() {
                 builder.show()
 
             }
-            val dateTime=""+menuDetail.date.hours+":"+menuDetail.date.minutes+"   "+menuDetail.date.date+"/"+menuDetail.date.month+"/"+(menuDetail.date.year+1900)
+            val dateTime=menuDetail.displayDate
+
             view.findViewById<TextView>(R.id.foodTimeing).text = dateTime
             view.findViewById<LinearLayout>(R.id.linearLayout2).setOnClickListener{
                 val builder = AlertDialog.Builder(requireContext())
@@ -112,7 +124,13 @@ class UploadMenuFragment : Fragment() {
 
             }
 
-
+          view.setOnClickListener{
+              val pdfUrl = menuDetail.url
+              val uri=(Uri.parse(pdfUrl))
+              val intent = Intent(Intent.ACTION_VIEW, uri)
+              intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+              startActivity(intent)
+          }
 
 
 
