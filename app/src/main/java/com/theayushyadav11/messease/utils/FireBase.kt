@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.io.File
 
 class FireBase {
@@ -70,10 +71,14 @@ class FireBase {
         }
 
     }
-    fun uploadPdfToFirebase(uri:Uri,key:String, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
+    fun uploadPdfToFirebase(v:Int,uri:Uri,key:String, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
         val storage = FirebaseStorage.getInstance()
         val storageRef = storage.reference
-        val pdfRef = storageRef.child("ApprovePdf").child("MessMenu.pdf$key")
+        val pdfRef:StorageReference
+        if(v==0)
+        pdfRef = storageRef.child("ApprovePdf").child("MessMenu.pdf$key")
+        else
+            pdfRef = storageRef.child("MainPdf").child("MessMenu.pdf")
 
         val file = uri
         val uploadTask = pdfRef.putFile(file)

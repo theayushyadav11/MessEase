@@ -114,6 +114,35 @@
             android:text="Male"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilBatch"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="25dp"
+        android:layout_margin="25dp"
+        android:hint="Gender"
+        app:boxStrokeColor="@color/food"
+        app:boxStrokeWidth="2dp"
+
+
+        app:helperTextTextColor="#FF0015"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilYear"
+        app:startIconDrawable="@drawable/baseline_person_24">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoBatch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:inputType="none"
+            android:text="Btech" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
 
     <com.google.android.material.button.MaterialButton
         android:backgroundTint="@color/food"
@@ -124,6 +153,6 @@
         android:text="Done"
         android:layout_margin="25dp"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/tilYear"/>
+        app:layout_constraintTop_toBottomOf="@id/tilBatch"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

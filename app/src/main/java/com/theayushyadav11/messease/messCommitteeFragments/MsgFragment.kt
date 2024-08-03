@@ -6,18 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.theayushyadav11.messease.R
-
+import com.theayushyadav11.messease.databinding.FragmentMsgBinding
+import com.theayushyadav11.messease.databinding.FragmentUploadMenuBinding
 
 
 class MsgFragment : Fragment() {
+    private lateinit var binding:FragmentMsgBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_msg, container, false)
+       binding=FragmentMsgBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+
+    }
 
 }

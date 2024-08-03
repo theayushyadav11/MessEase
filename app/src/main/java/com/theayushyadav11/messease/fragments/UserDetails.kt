@@ -62,11 +62,13 @@ class UserDetails : Fragment() {
             val name=binding.etName.text.toString().trim()
             val passingYear=binding.auto.text.toString().trim()
             val gender=binding.autoGender.text.toString().trim()
+            val batch=binding.autoBatch.text.toString().trim()
             if(name.isNotEmpty())
             {
                 mess.addPb("Adding Details...")
                 database.child("Users").child(auth.currentUser?.uid.toString()).child("details").child("name").setValue(name)
                 database.child("Users").child(auth.currentUser?.uid.toString()).child("details").child("passYear").setValue(passingYear)
+                database.child("Users").child(auth.currentUser?.uid.toString()).child("details").child("batch").setValue(batch)
                 database.child("Users").child(auth.currentUser?.uid.toString()).child("details").child("gender").setValue(gender).addOnCompleteListener {
                     if (it.isSuccessful)
                     {
@@ -92,6 +94,12 @@ class UserDetails : Fragment() {
         var listOfYear = listOf(year, year + 1, year + 2, year + 3, year + 4, year + 5)
         val adapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, listOfYear)
         binding.auto.setAdapter(adapter)
+
+
+        var listOfBatch = listOf("Btech","Mtech","M.B.A.","MSc","Phd")
+        val Batchadapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, listOfBatch)
+        binding.autoBatch.setAdapter(Batchadapter)
+
         val adapter2 = ArrayAdapter(requireContext(), R.layout.drop_down_item, listOf("Male","Female"))
         binding.autoGender.setAdapter(adapter2)
 

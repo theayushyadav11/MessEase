@@ -70,6 +70,19 @@ class UploadMenuViewModel : ViewModel() {
             }
         }
     }
+    fun uploadMainMenuUrl(url:String,onSucess:(String) -> Unit,onFailure:(String) -> Unit)
+    {
+        database.child("MainMenuUrl").setValue(url).addOnCompleteListener {
+            if(it.isSuccessful)
+            {
+                onSucess("Sucessfully uploaded")
+            }
+            else
+            {
+                onFailure(it.exception?.message.toString())
+            }
+        }
+    }
 
 }
 data class Menu2(

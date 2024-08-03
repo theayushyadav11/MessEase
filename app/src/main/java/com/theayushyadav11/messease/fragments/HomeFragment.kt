@@ -133,54 +133,21 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         }
     }
 
-    fun addELements() {
-
-        binding.adder.removeAllViews()
-        FirebaseDatabase.getInstance().reference.child("polls").addValueEventListener(object :
-            ValueEventListener {
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                binding.adder.removeAllViews()
-                val pollsList = mutableListOf<Poll>()
-                for (pollSnapshot in snapshot.children) {
-                    val poll = pollSnapshot.getValue(Poll::class.java)
-                    println(poll)
-                    val date = Date()
-                    val check =
-                        poll != null &&poll.date=="$day${getCurrentDate()}"
-                    mess.log(day)
-                    if (check) {
-                        println(date.date)
-                        if (poll != null) {
-                            pollsList.add(poll)
-                            addPoll(poll)
-                        }
-                    }
-                }
+    fun addELements(date:String) {
 
 
-
-
-
-
-
-
-                mess.log(pollsList)
-                println(
-                    "Polls for current date with status " +
-                            "   : $pollsList"
-                )
-                addFood(list)
+        homeViewModel.getPolls(date, onSuccess = {
+            binding.adder.removeAllViews()
+            for(poll in it)
+            {
+                addPoll(poll)
             }
+            addFood(list)
 
-            override fun onCancelled(error: DatabaseError) {
-                // Handle possible errors.
-                println("Error fetching data: ${error.message}")
-                addFood(list)
-            }
+        }, onFailure = {
+            addFood(list)
+            mess.log(it)
         })
-
-
     }
 
     fun addFood(list: MutableList<Particulars>) {
@@ -199,7 +166,6 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
             binding.adder.addView(layout)
         }
     }
-
     private fun addPoll(poll: Poll) {
         if (!isAdded) return
         val context = context ?: return //
@@ -336,6 +302,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         main: DateAdapter.DateViewHolder
     ) {
         day = position + 1
+        addELements("$day${getCurrentDate()}")
         binding.rv.smoothScrollToPosition(position + 3)
         main.main.setBackgroundColor(resources.getColor(R.color.menu))
         main.dates.setTextColor(resources.getColor(R.color.food))
@@ -354,7 +321,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
                 dayOfWeek.observe(viewLifecycleOwner) { value ->
                     list = value?.let { getMenu(menu, it) }!!
                     if (list != null) {
-                        addELements()
+                        addELements("$day${getCurrentDate()}")
                     }
                     Log.d("yadavjikabeta ", list.toString())
                 }

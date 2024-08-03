@@ -91,7 +91,7 @@ class PollsFragment : Fragment() {
                     val poll = snapshot.getValue(Poll::class.java)
                     if (poll != null) {
                         pollsList.add(poll)
-                        pollsList.sortByDescending { it.date }
+                        pollsList.sortByDescending { it.comp }
                     }
                     else{
                         println("lund lelo")

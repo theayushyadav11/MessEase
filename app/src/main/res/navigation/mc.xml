@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_mcMain2_to_uploadMenuFragment"
             app:destination="@id/uploadMenuFragment" />
+        <action
+            android:id="@+id/action_mcMain2_to_msgFragment"
+            app:destination="@id/msgFragment" />
     </fragment>
     <fragment
         android:id="@+id/mcMenu2"
@@ -38,4 +41,9 @@
         android:name="com.theayushyadav11.messease.messCommitteeFragments.UploadMenuFragment"
         android:label="fragment_upload_menu"
         tools:layout="@layout/fragment_upload_menu" />
+    <fragment
+        android:id="@+id/msgFragment"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.MsgFragment"
+        android:label="fragment_msg"
+        tools:layout="@layout/fragment_msg" />
 </navigation>

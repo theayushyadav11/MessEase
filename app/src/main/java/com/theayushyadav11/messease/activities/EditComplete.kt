@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -90,7 +91,7 @@ class EditComplete : AppCompatActivity() {
         fun sendToCorrdi(note: String, creater: String) {
             mess.addPb("Sending...")
             val key = FirebaseDatabase.getInstance().reference.push().key.toString()
-            FireBase().uploadPdfToFirebase(uri,key, onSuccess ={pdfurl->
+            FireBase().uploadPdfToFirebase(0,uri,key, onSuccess ={pdfurl->
 
                 val roomDatabase = MenuDatabase.getDatabase(this).menuDao()
                 lifecycleScope.launch(Dispatchers.IO) {
@@ -126,6 +127,7 @@ class EditComplete : AppCompatActivity() {
 
 
 mess.pbDismiss()
+                binding.send.isVisible=false
             },
                 onFailure ={exception ->
 

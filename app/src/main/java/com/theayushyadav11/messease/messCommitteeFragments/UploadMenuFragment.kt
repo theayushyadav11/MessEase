@@ -108,13 +108,27 @@ class UploadMenuFragment : Fragment() {
 
             view.findViewById<TextView>(R.id.foodTimeing).text = dateTime
             view.findViewById<LinearLayout>(R.id.linearLayout2).setOnClickListener{
+
+
+
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Alert!")
                 builder.setCancelable(false)
                 builder.setMessage("Are you sure you want upload a new Menu?")
                 builder.setPositiveButton("Yes") { dialog, which ->
-                    menuDetail.menu?.let { it1 -> viewModel.uploadMainMenu(it1) }
+                    val uri=Uri.parse(menuDetail.url)
+                    FireBase().uploadPdfToFirebase(1,uri,"", onSuccess = {
+                        viewModel.uploadMainMenuUrl(it, onSucess = {}, onFailure = {
+                            mess.toast(it)
+                            mess.log(it)
+                        })
+                    }, onFailure = {
+                        mess.toast(it.toString())
+                        mess.log(it)
+                    })
                     viewModel.deleteApprove(menuDetail.id)
+                    menuDetail.menu?.let { it1 -> viewModel.uploadMainMenu(it1) }
+
                     dialog.dismiss()
                 }
                 builder.setNegativeButton("No") { dialog, _ ->

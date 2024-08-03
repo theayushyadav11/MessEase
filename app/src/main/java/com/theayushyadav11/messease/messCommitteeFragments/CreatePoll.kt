@@ -1,5 +1,6 @@
 package com.theayushyadav11.messease.messCommitteeFragments
 
+import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -15,7 +18,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.theayushyadav11.messease.R
+import com.theayushyadav11.messease.databinding.EditDialogBinding
 import com.theayushyadav11.messease.databinding.FragmentCreatePollBinding
+import com.theayushyadav11.messease.databinding.SelTargetDialogBinding
 import com.theayushyadav11.messease.models.Option
 import com.theayushyadav11.messease.models.Poll
 import com.theayushyadav11.messease.utils.Mess
@@ -64,29 +69,18 @@ class CreatePoll : Fragment() {
         }
         addElements(binding.opt1)
         binding.btnPost.setOnClickListener {
-
-            var options: MutableSet<String> = mutableSetOf()
-
-
-
+            var options:MutableList<String> = mutableListOf()
             for (i in optionList) {
 
                 if (i.text.toString().isNotEmpty())
                     options.add(i.text.toString() + "\n")
             }
-            val poll = Poll(
-                database.push().key.toString(),
-                auth.currentUser?.displayName.toString(),
-                binding.tvQuestion.text.toString(),
-                mess.getCurrentDate(),
-                mess.getCurrentTimeInAmPm(),
-                0,
-                binding.materialSwitch.isChecked,
-                options.toMutableList(),
+           if( binding.tvQuestion.text.isNotEmpty()&&options.size>1)
+      openDialog()
+         else {
+            mess.toast("Cannot add Empty feilds!")
+        }
 
-
-                )
-            addPoll(poll)
         }
 
 
@@ -128,7 +122,7 @@ class CreatePoll : Fragment() {
                 if (it.isSuccessful) {
                     mess.toast("Poll added Successfully.")
                     addToUser(key)
-                    findNavController().navigate(R.id.action_createPoll_to_mcMain2)
+
                 } else {
                     mess.toast("failed to add poll!")
                 }
@@ -143,9 +137,7 @@ class CreatePoll : Fragment() {
     fun addToUser(key: String) {
         database.child("Users").child(auth.currentUser?.uid.toString()).child("polls").push()
             .setValue(key)
-            .addOnCompleteListener {
 
-            }
 
     }
 
@@ -154,5 +146,110 @@ class CreatePoll : Fragment() {
         val current = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         return current.format(formatter)
+    }
+    fun openDialog()
+    {
+        val dialog = Dialog(requireContext())
+        val bind = SelTargetDialogBinding.inflate(layoutInflater)
+        dialog.setContentView(bind.root)
+        dialog.setCancelable(false)
+        val c=(Date().year+1900)
+        val batches= listOf(c,c+1,c+2,c+3,c+4,c+5)
+        val rbList:List<RadioButton> = listOf(bind.rb0,bind.rb1,bind.rb2,bind.rb3,bind.rb4,bind.rb5,bind.rbGirl,bind.rbBoy,bind.rbBtech,bind.rbMtech,bind.rbMba,bind.rbMsc)
+
+        for(i in 0 until batches.size)
+        {
+            rbList[i].setText("Batch - ${batches[i]}")
+        }
+        bind.cb.setOnCheckedChangeListener { buttonView, isChecked ->
+               for(i in rbList)
+               {
+                   i.isChecked=isChecked
+               }
+        }
+        bind.btnCancel.setOnClickListener{
+            dialog.dismiss()
+        }
+        bind.btnAddPoll.setOnClickListener{
+            var target=""
+            for(i in rbList)
+            {
+                if(i.isChecked)
+                {
+                    target+=i.text
+                }
+            }
+            var yearSelected=false
+            var genderSelected=false
+            var batchSelected=false
+            for(i in 0 until rbList.size)
+            {
+                if(i<6&&rbList[i].isChecked)
+                    yearSelected=true
+                if(i>5&&i<8&&rbList[i].isChecked)
+                    genderSelected=true
+                if(i>7&&rbList[i].isChecked)
+                    batchSelected=true
+            }
+            if(!yearSelected)
+            {
+                mess.toast("Please Select a year")
+            }
+            else if(!genderSelected)
+            {
+                mess.toast("Please Select gender")
+            }
+            else if(!batchSelected)
+            {
+                mess.toast("Please Select a batch")
+            }
+            else
+            {
+                send(target)
+                dialog.dismiss()
+                findNavController().navigateUp()
+            }
+        }
+
+        
+
+
+
+
+
+
+
+
+
+        dialog.show()
+
+
+    }
+    fun send(target:String)
+    {
+        var options: MutableSet<String> = mutableSetOf()
+
+
+
+        for (i in optionList) {
+
+            if (i.text.toString().isNotEmpty())
+                options.add(i.text.toString() + "\n")
+        }
+        val poll = Poll(
+            database.push().key.toString(),
+            auth.currentUser?.displayName.toString(),
+            binding.tvQuestion.text.toString(),
+            Date(),
+            mess.getCurrentDate(),
+            mess.getCurrentTimeInAmPm(),
+            0,
+            binding.materialSwitch.isChecked,
+            options.toMutableList(),
+            target
+
+
+            )
+        addPoll(poll)
     }
 }

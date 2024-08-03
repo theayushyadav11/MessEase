@@ -1,7 +1,6 @@
 package com.theayushyadav11.messease.messCommitteeFragments
 
 
-
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -26,7 +25,6 @@ import com.theayushyadav11.messease.activities.MenuMaking
 import com.theayushyadav11.messease.adapters.ViewPagerAdapter
 import com.theayushyadav11.messease.databinding.FragmentMcMainBinding
 import com.theayushyadav11.messease.utils.Mess
-import java.util.Date
 
 
 class McMAin : Fragment() {
@@ -35,7 +33,7 @@ class McMAin : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
-    private lateinit var mess:Mess
+    private lateinit var mess: Mess
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,15 +54,14 @@ class McMAin : Fragment() {
     fun initialise() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
-        mess= Mess(requireContext())
+        mess = Mess(requireContext())
         binding.tvname.text = auth.currentUser?.displayName
         binding.tvEmail.text = auth.currentUser?.email
 
         try {
-            val v=(  (auth.currentUser?.email.toString().substring(3,7).toInt()+4 ))
+            val v = ((auth.currentUser?.email.toString().substring(3, 7).toInt() + 4))
             binding.tvYear.text = " Batch - $v"
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             binding.tvYear.text = "Batch - 2027"
         }
 
@@ -81,17 +78,17 @@ class McMAin : Fragment() {
             findNavController().navigate(R.id.action_mcMain2_to_createPoll)
         }
         binding.editMenu.setOnClickListener {
-           startActivity(Intent(requireContext(),MenuMaking::class.java))
+            startActivity(Intent(requireContext(), MenuMaking::class.java))
+        }
+        binding.createMsg.setOnClickListener {
+            findNavController().navigate(R.id.action_mcMain2_to_msgFragment)
         }
 
         binding.uploadMenu.setOnClickListener {
             mess.disign.observe(requireActivity(), Observer {
-                if(it.equals("Coordinator"))
-                {
+                if (it.equals("Coordinator")) {
                     findNavController().navigate(R.id.action_mcMain2_to_uploadMenuFragment)
-                }
-                else
-                {
+                } else {
                     mess.toast("Only Coordinator can upload Menu")
                 }
             })
@@ -114,7 +111,7 @@ class McMAin : Fragment() {
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     Log.d("Designation", snapshot.toString())
-                    binding.tvDesignation.text=snapshot.value.toString()
+                    binding.tvDesignation.text = snapshot.value.toString()
                     Log.d("Designation", v)
                 }
 
@@ -125,18 +122,17 @@ class McMAin : Fragment() {
             })
         return v
     }
-    fun setTab()
-    {
-        val adapter=ViewPagerAdapter(requireActivity().supportFragmentManager,lifecycle)
-        binding.viewPager.adapter=adapter
-        TabLayoutMediator(binding.tabLayout,binding.viewPager){
-            tab,position->
-            when(position)
-            {
-                0->{
-                    tab.text="Polls"
+
+    fun setTab() {
+        val adapter = ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
+        binding.viewPager.adapter = adapter
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = "Polls"
                 }
-                1-> tab.text="Messages"
+
+                1 -> tab.text = "Messages"
             }
         }.attach()
     }

@@ -6,11 +6,13 @@ data class Poll (
     val uid:String="",
     val creater:String="",
     val question:String="",
+    val comp:Date =Date(),
     val date: String ="",
     val time: String ="",
     var totalVotes:Int=0,
     var isMultiple:Boolean=false,
-    val options:MutableList<String> = mutableListOf()
+    val options:MutableList<String> = mutableListOf(),
+    val target:String =""
 
 
     )

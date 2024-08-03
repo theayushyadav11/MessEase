@@ -122,7 +122,7 @@ fun save(key:String,value:String)
     }
     fun getCurrentDate(): String {
         val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("${Date().date}/MM/yyyy", Locale.getDefault())
         return dateFormat.format(calendar.time)
     }
     fun getCurrentTimeAndDate(): String {
