@@ -5,14 +5,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#edf6f4"
-  >
+    android:background="#edf6f4">
 
     <TextView
-        android:layout_marginTop="40dp"
         android:id="@+id/tvHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:text="Login to  your account"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -21,30 +20,28 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilEmail"
         android:layout_width="0dp"
-        android:layout_marginTop="100dp"
-       android:layout_marginHorizontal="25dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginTop="100dp"
         android:hint="Email"
         app:boxStrokeWidth="2dp"
         app:endIconMode="clear_text"
         app:helperText="Required*"
         app:helperTextTextColor="#FF0015"
-        app:startIconDrawable="@drawable/baseline_attach_email_24"
-
         app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHeading">
+        app:layout_constraintTop_toBottomOf="@+id/tvHeading"
+        app:startIconDrawable="@drawable/baseline_attach_email_24">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            />
+            android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -74,9 +71,9 @@
         android:id="@+id/tvForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
         android:text="Forgot Password."
         android:textColor="#008EFF"
-        android:layout_marginStart="35dp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
@@ -95,13 +92,12 @@
         app:layout_constraintTop_toBottomOf="@+id/tvForgotPassword" />
 
 
-
     <com.google.android.gms.common.SignInButton
         android:id="@+id/gsi"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginTop="25dp"
         android:layout_marginHorizontal="35dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
         tools:layout_editor_absoluteX="25dp" />
 

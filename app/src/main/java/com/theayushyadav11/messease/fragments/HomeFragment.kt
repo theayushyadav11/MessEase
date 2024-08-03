@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RadioButton
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
@@ -21,16 +21,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.MutableData
-import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.values
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.adapters.DateAdapter
 import com.theayushyadav11.messease.adapters.DateItem
 import com.theayushyadav11.messease.databinding.DailyMenuBinding
 import com.theayushyadav11.messease.databinding.FragmentHomeBinding
-import com.theayushyadav11.messease.models.Option
 import com.theayushyadav11.messease.models.Poll
 import com.theayushyadav11.messease.utils.FireBase
 import com.theayushyadav11.messease.utils.Mess
@@ -106,12 +102,10 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         val layoutManager = binding.rv.layoutManager as LinearLayoutManager
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
         val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-        if(firstVisibleItemPosition>6)
-        {
+        if (firstVisibleItemPosition > 6) {
             binding.imageView2.visibility = View.VISIBLE
         }
-        if(lastVisibleItemPosition<24)
-        {
+        if (lastVisibleItemPosition < 24) {
             binding.imageView.visibility = View.VISIBLE
         }
 
@@ -133,13 +127,12 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         }
     }
 
-    fun addELements(date:String) {
+    fun addELements(date: String) {
 
 
         homeViewModel.getPolls(date, onSuccess = {
             binding.adder.removeAllViews()
-            for(poll in it)
-            {
+            for (poll in it) {
                 addPoll(poll)
             }
             addFood(list)
@@ -166,6 +159,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
             binding.adder.addView(layout)
         }
     }
+
     private fun addPoll(poll: Poll) {
         if (!isAdded) return
         val context = context ?: return //
@@ -174,9 +168,9 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         val question: TextView = itemView.findViewById(R.id.tvQuestion)
         val name: TextView = itemView.findViewById(R.id.tvname)
         val linearLayout: LinearLayout = itemView.findViewById(R.id.radioGroup)
-        itemView.findViewById<ImageView>(R.id.delete).isVisible=false
-        itemView.findViewById<LinearLayout>(R.id.vv).isVisible=false
-        itemView.findViewById<TextView>(R.id.time).text=poll.time
+        itemView.findViewById<ImageView>(R.id.delete).isVisible = false
+        itemView.findViewById<LinearLayout>(R.id.vv).isVisible = false
+        itemView.findViewById<TextView>(R.id.time).text = poll.time
 
         question.text = poll.question
         name.text = poll.creater
@@ -195,8 +189,6 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
             listOfRb.add(optRb)
             val optNop = view.findViewById<TextView>(R.id.nop)
             val pl: ConstraintLayout = view.findViewById(R.id.pl)
-
-
 
 
             var count = 0
@@ -233,9 +225,8 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
                             if (snapshot.value.toString().trim() == optTitle.text.trim()) {
                                 optRb.isChecked = true
 
-                            }
-                            else
-                                optRb.isChecked=false
+                            } else
+                                optRb.isChecked = false
                         }
 
                         override fun onCancelled(error: DatabaseError) {
@@ -269,11 +260,11 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         currentIndex: Int,
         uid: String,
     ) {
-             var i =0
+        var i = 0
         for (i in 0 until listOfRb.size) {
             if (i == currentIndex) {
                 listOfRb[i].isChecked = true
-                optionSelect(uid,options[i])
+                optionSelect(uid, options[i])
 
             } else {
                 listOfRb[i].isChecked = false
@@ -361,7 +352,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         }
     }
 
-    fun optionSelect(uid: String, option:String) {
+    fun optionSelect(uid: String, option: String) {
 
         database.child("pollResult").child(uid).child(auth.currentUser?.uid.toString())
             .setValue(option)
@@ -375,13 +366,10 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
                             }
                         }
                     }
+
                     override fun onCancelled(error: DatabaseError) {
                     }
                 })
-
-
-
-
 
 
     }

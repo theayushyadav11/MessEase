@@ -18,8 +18,9 @@ class DateAdapter(
 ) : RecyclerView.Adapter<DateAdapter.DateViewHolder>() {
 
     var dates: MutableList<DateItem> = mutableListOf()
-    var datOfWeek: Int=0
-    private var selectedPosition = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)-1
+    var datOfWeek: Int = 0
+    private var selectedPosition = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) - 1
+
     interface Listeners {
         fun ondateSelected(date: DateItem, position: Int, main: DateViewHolder)
 
@@ -53,12 +54,13 @@ class DateAdapter(
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
         for (dayOfMonth in 1..daysInMonth) {
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-             datOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+            datOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
 
-            val dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
+            val dayOfWeek =
+                calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
 
-            val dateItem = DateItem(dayOfWeek.substring(0, 3) , dayOfMonth,datOfWeek)
+            val dateItem = DateItem(dayOfWeek.substring(0, 3), dayOfMonth, datOfWeek)
             dates.add(dateItem)
         }
 
@@ -66,15 +68,26 @@ class DateAdapter(
         holder.dates.text = dates[position].dayOfMonth.toString()
         if (position == selectedPosition) {
 
-            holder.main.setBackgroundColor(ContextCompat.getColor(holder.itemView.context,
-                R.color.menu
-            ))
+            holder.main.setBackgroundColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.menu
+                )
+            )
             holder.dates.setTextColor(Color.parseColor("#1972f0"))
         } else {
-            holder.main.setBackgroundColor(ContextCompat.getColor(holder.itemView.context,
-                R.color.white
-            ))
-            holder.dates.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.black))
+            holder.main.setBackgroundColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.white
+                )
+            )
+            holder.dates.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.black
+                )
+            )
         }
 
 
@@ -85,9 +98,10 @@ class DateAdapter(
             // Notify adapter to refresh the UI
             notifyItemChanged(previousPosition)
             notifyItemChanged(selectedPosition)
-            listener.ondateSelected(dates[position], position,holder)
+            listener.ondateSelected(dates[position], position, holder)
         }
     }
+
     private fun getCurrentDayOfWeek(): Int {
         val calendar = Calendar.getInstance()
         return calendar.get(Calendar.DAY_OF_WEEK)

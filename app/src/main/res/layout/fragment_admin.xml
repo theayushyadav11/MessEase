@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menu"
-    >
-
-
+    android:background="@color/menu">
 
 
     <TextView
@@ -31,13 +27,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25dp"
+        android:layout_marginTop="100dp"
         android:hint="Email"
+        app:boxStrokeColor="@color/food"
         app:boxStrokeWidth="2dp"
         app:endIconMode="clear_text"
-        app:boxStrokeColor="@color/food"
         app:helperTextTextColor="#FF0015"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="100dp"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
@@ -58,11 +54,11 @@
         android:hint="Password"
         app:boxStrokeColor="@color/food"
         app:boxStrokeWidth="2dp"
-app:passwordToggleEnabled="true"
         app:helperTextTextColor="#FF0015"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilEmail"
+        app:passwordToggleEnabled="true"
 
         app:startIconDrawable="@drawable/baseline_lock_24">
 
@@ -81,9 +77,9 @@ app:passwordToggleEnabled="true"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
         android:hint="Name"
+        app:boxStrokeColor="@color/food"
         app:boxStrokeWidth="2dp"
         app:endIconMode="clear_text"
-        app:boxStrokeColor="@color/food"
         app:helperTextTextColor="#FF0015"
         app:layout_constraintEnd_toEndOf="parent"
 
@@ -99,37 +95,37 @@ app:passwordToggleEnabled="true"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
-<!--    <com.google.android.material.textfield.TextInputLayout-->
-<!--        android:id="@+id/tilDesgination"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="25dp"-->
-<!--        android:hint="Designation"-->
-<!--        app:boxStrokeWidth="2dp"-->
-<!--        app:endIconMode="clear_text"-->
-<!--        app:boxStrokeColor="@color/food"-->
-<!--        app:helperTextTextColor="#FF0015"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--    <com.google.android.material.textfield.TextInputLayout-->
+    <!--        android:id="@+id/tilDesgination"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="25dp"-->
+    <!--        android:hint="Designation"-->
+    <!--        app:boxStrokeWidth="2dp"-->
+    <!--        app:endIconMode="clear_text"-->
+    <!--        app:boxStrokeColor="@color/food"-->
+    <!--        app:helperTextTextColor="#FF0015"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
 
 
-<!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
 
-<!--        app:layout_constraintTop_toBottomOf="@+id/tilName"-->
-<!--        app:startIconDrawable="@drawable/baseline_assured_workload_24">-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/tilName"-->
+    <!--        app:startIconDrawable="@drawable/baseline_assured_workload_24">-->
 
-<!--        <com.google.android.material.textfield.TextInputEditText-->
-<!--            android:id="@+id/etDesignation"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:inputType="textEmailAddress" />-->
-<!--    </com.google.android.material.textfield.TextInputLayout>-->
+    <!--        <com.google.android.material.textfield.TextInputEditText-->
+    <!--            android:id="@+id/etDesignation"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:inputType="textEmailAddress" />-->
+    <!--    </com.google.android.material.textfield.TextInputLayout>-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilspin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
-       app:helperText="Designation"
-      app:helperTextTextColor="@color/food"
+        app:helperText="Designation"
+        app:helperTextTextColor="@color/food"
         app:layout_constraintEnd_toEndOf="parent"
 
         app:layout_constraintStart_toStartOf="parent"
@@ -145,25 +141,21 @@ app:passwordToggleEnabled="true"
     </com.google.android.material.textfield.TextInputLayout>
 
 
+    <!--    -->
+    <!--    -->
+    <!--    <Spinner-->
+    <!--        android:id="@+id/spinner"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_marginHorizontal="25dp"-->
+    <!--        android:layout_height="45dp"-->
+    <!--        android:background="#DFDFDF"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/btnAdd"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
 
 
+    <!--       app:layout_constraintStart_toStartOf="parent"-->
 
-
-<!--    -->
-<!--    -->
-<!--    <Spinner-->
-<!--        android:id="@+id/spinner"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_marginHorizontal="25dp"-->
-<!--        android:layout_height="45dp"-->
-<!--        android:background="#DFDFDF"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/btnAdd"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-
-
-<!--       app:layout_constraintStart_toStartOf="parent"-->
-
-<!--   app:layout_constraintTop_toBottomOf="@+id/tilName"/>-->
+    <!--   app:layout_constraintTop_toBottomOf="@+id/tilName"/>-->
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAdd"

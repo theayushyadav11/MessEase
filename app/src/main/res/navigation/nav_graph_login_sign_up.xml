@@ -9,11 +9,11 @@
         android:id="@+id/loginInFragment"
         android:name="com.theayushyadav11.messease.fragments.LoginInFragment"
         android:label="fragment_login_in"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
-            app:enterAnim="@anim/slide_in_right"
             android:id="@+id/action_loginInFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@anim/slide_in_right" />
         <action
             android:id="@+id/action_loginInFragment_to_userDetails"
             app:destination="@id/userDetails" />
@@ -22,17 +22,17 @@
         android:id="@+id/signUpFragment"
         android:name="com.theayushyadav11.messease.fragments.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" >
+        tools:layout="@layout/fragment_sign_up">
 
         <action
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_in_left"
             android:id="@+id/action_signUpFragment_to_otpFragment"
-            app:destination="@id/otpFragment" />
+            app:destination="@id/otpFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left" />
         <action
-            app:enterAnim="@anim/slide_in_left"
             android:id="@+id/action_signUpFragment_to_loginInFragment"
-            app:destination="@id/loginInFragment" />
+            app:destination="@id/loginInFragment"
+            app:enterAnim="@anim/slide_in_left" />
     </fragment>
     <fragment
 

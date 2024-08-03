@@ -1,23 +1,11 @@
 package com.theayushyadav11.messease.activities
 
-import android.Manifest
-import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -30,28 +18,27 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.ActivityMainBinding
-import com.theayushyadav11.messease.utils.NotificationReceiver
-import java.util.Calendar
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var drawerLayout:DrawerLayout
-     override fun onCreate(savedInstanceState: Bundle?) {
+    private lateinit var drawerLayout: DrawerLayout
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-            setContentView(binding.root)
-            init()
+        setContentView(binding.root)
+        init()
 
-        }
+    }
 
-        override fun onCreateOptionsMenu(menu: Menu): Boolean {
-            menuInflater.inflate(R.menu.main, menu)
-            return true
-        }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> {
@@ -59,69 +46,79 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
                 true
             }
+
             R.id.action_review -> {
 
                 Toast.makeText(this, "Write Review clicked", Toast.LENGTH_SHORT).show()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-        override fun onSupportNavigateUp(): Boolean {
-            val navController = findNavController(R.id.nav_host_fragment_content_main)
-            return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    fun init() {
+        setSupportActionBar(binding.appBarMain.toolbar)
+        drawerLayout = binding.drawerLayout
+        val navView: NavigationView = binding.navView
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        val menu: Menu = navView.menu
+        val menuItem1 = menu.findItem(R.id.nav_messCommitteeActivity)
+        val menuItem2 = menu.findItem(R.id.loggedin)
+
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            menuItem1.isVisible = true
+            appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.nav_home,
+                    R.id.nav_messCommitteeActivity,
+                    R.id.nav_slideshow,
+                    R.id.nav_admin,
+                    R.id.nav_logout
+                ), drawerLayout
+            )
+        } else {
+            menuItem2.isVisible = true
+            appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.nav_home,
+                    R.id.loggedin,
+                    R.id.nav_slideshow,
+                    R.id.nav_admin,
+                    R.id.nav_logout
+                ), drawerLayout
+            )
         }
-        fun init()
-        {
-            setSupportActionBar(binding.appBarMain.toolbar)
-             drawerLayout= binding.drawerLayout
-            val navView: NavigationView = binding.navView
-            val navController = findNavController(R.id.nav_host_fragment_content_main)
-            val menu: Menu = navView.menu
-            val menuItem1 = menu.findItem(R.id.nav_messCommitteeActivity)
-            val menuItem2 = menu.findItem(R.id.loggedin)
 
-            if(FirebaseAuth.getInstance().currentUser==null) {
-                    menuItem1.isVisible=true
-                appBarConfiguration = AppBarConfiguration(
-                    setOf(
-                        R.id.nav_home, R.id.nav_messCommitteeActivity, R.id.nav_slideshow,R.id.nav_admin,R.id.nav_logout
-                    ), drawerLayout
-                )
-            }
-            else
-            {
-                menuItem2.isVisible=true
-                appBarConfiguration = AppBarConfiguration(
-                    setOf(
-                        R.id.nav_home, R.id.loggedin, R.id.nav_slideshow,R.id.nav_admin,R.id.nav_logout
-                    ), drawerLayout
-                )
-            }
+        setSupportActionBar(binding.appBarMain.toolbar)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_logout -> {
+                    signOut()
 
-            setSupportActionBar(binding.appBarMain.toolbar)
-            setupActionBarWithNavController(navController, appBarConfiguration)
-            navView.setupWithNavController(navController)
-            navView.setNavigationItemSelectedListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.nav_logout -> {
-                       signOut()
+                    true
+                }
 
-                        true
-                    }
-                    else -> {
-                        navController.navigate(menuItem.itemId)
-                        drawerLayout.closeDrawers()
-                        true
-                    }
+                else -> {
+                    navController.navigate(menuItem.itemId)
+                    drawerLayout.closeDrawers()
+                    true
                 }
             }
         }
+    }
 
     override fun onBackPressed() {
         super.onBackPressed()
     }
+
     fun signOut() {
         var mAuth = FirebaseAuth.getInstance()
 
@@ -144,5 +141,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    data class NotificationData(val hour: Int, val minute: Int, val title: String, val text: String, val id: Int)
+    data class NotificationData(
+        val hour: Int,
+        val minute: Int,
+        val title: String,
+        val text: String,
+        val id: Int
+    )
 }

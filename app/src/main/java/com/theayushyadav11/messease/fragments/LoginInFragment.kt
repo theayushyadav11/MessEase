@@ -4,13 +4,13 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -30,23 +30,25 @@ import com.theayushyadav11.messease.databinding.FragmentLoginBinding
 import com.theayushyadav11.messease.utils.Mess
 
 class LoginInFragment : Fragment() {
- private lateinit var binding:FragmentLoginBinding
+    private lateinit var binding: FragmentLoginBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
     private lateinit var googleSignInClient: GoogleSignInClient
     private var progressDialog: AlertDialog? = null
-    lateinit var mess:Mess
+    lateinit var mess: Mess
 
     companion object {
         const val RC_SIGN_IN = 9001
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding=FragmentLoginBinding.inflate(layoutInflater,container,false)
+        binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -55,14 +57,10 @@ class LoginInFragment : Fragment() {
         listeners()
 
 
-
-
-
-
     }
-    fun initialise()
-    {
-        mess=Mess(requireContext())
+
+    fun initialise() {
+        mess = Mess(requireContext())
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -72,8 +70,8 @@ class LoginInFragment : Fragment() {
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
     }
-    fun listeners()
-    {
+
+    fun listeners() {
         binding.btngsi.setOnClickListener {
             signIn()
         }
@@ -81,7 +79,7 @@ class LoginInFragment : Fragment() {
             mess.addPb("Logging in...")
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
-            loginUser(email,password)
+            loginUser(email, password)
         }
         binding.tvForgotPassword.setOnClickListener {
             forgotPassword()
@@ -90,9 +88,6 @@ class LoginInFragment : Fragment() {
             signUp()
         }
     }
-
-
-
 
 
     private fun signIn() {
@@ -111,20 +106,26 @@ class LoginInFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
-                if(account.email?.endsWith("@iiitl.ac.in") == true||true) {
+                if (account.email?.endsWith("@iiitl.ac.in") == true || true) {
 
                     firebaseAuthWithGoogle(account)
-                }
-                else
-                {
-                   mess.pbDismiss()
+                } else {
+                    mess.pbDismiss()
                     googleSignInClient.signOut()
-                    Toast.makeText(requireContext(), "Login with college email id only", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Login with college email id only",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                 }
             } catch (e: ApiException) {
                 mess.pbDismiss()
-                Toast.makeText(requireContext(), "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Google sign in failed: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -142,7 +143,11 @@ class LoginInFragment : Fragment() {
                 } else {
                     mess.pbDismiss()
                     googleSignInClient.signOut()
-                    Toast.makeText(requireContext(), "Not a member of mess Committee.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Not a member of mess Committee.",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
@@ -161,14 +166,19 @@ class LoginInFragment : Fragment() {
                 if (task.isSuccessful) {
                     Log.d("Firebase", "signInWithCredential:success")
                     val user = auth.currentUser
-                    Toast.makeText(requireContext(), "Authentication Successful.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Authentication Successful.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     checkEmailAllowed()
 
-                   navigate()
+                    navigate()
 
                 } else {
                     Log.w("Firebase", "signInWithCredential:failure", task.exception)
-                    Toast.makeText(requireContext(), "Authentication Failed.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Authentication Failed.", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
     }
@@ -182,19 +192,25 @@ class LoginInFragment : Fragment() {
     private fun forgotPassword() {
         val email = binding.etEmail.text.toString().trim()
         if (email.isNotEmpty()) {
-           mess.addPb("Sending Password reset email...")
+            mess.addPb("Sending Password reset email...")
             auth.sendPasswordResetEmail(email)
                 .addOnCompleteListener { task ->
-                 mess.pbDismiss()
+                    mess.pbDismiss()
                     if (task.isSuccessful) {
-                        Toast.makeText(requireContext(), "Password reset email sent", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Password reset email sent",
+                            Toast.LENGTH_LONG
+                        ).show()
                     } else {
-                        Toast.makeText(requireContext(), task.exception?.message.toString(), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            requireContext(),
+                            task.exception?.message.toString(),
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
-        }
-        else
-        {
+        } else {
             Snackbar.make(binding.root, "Email cannot be empty!", Snackbar.LENGTH_LONG).show()
             mess.pbDismiss()
         }
@@ -206,14 +222,13 @@ class LoginInFragment : Fragment() {
         imageView.startAnimation(animation)
     }
 
-    fun signUp()
-    {
+    fun signUp() {
         findNavController().navigate(R.id.action_loginInFragment_to_signUpFragment)
     }
 
     private fun loginUser(email: String, password: String) {
 
-        if (email.isNotEmpty()&&password.isNotEmpty()) {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener() { task ->
                     mess.pbDismiss()
@@ -221,39 +236,48 @@ class LoginInFragment : Fragment() {
                         // Check if email is verified
                         val user = auth.currentUser
                         if (user?.isEmailVerified == true) {
-                            Toast.makeText(requireContext(), "Email is verified", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Email is verified",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             checkEmailAllowed()
-                           navigate()
-    
+                            navigate()
+
                         } else {
                             // Email is not verified
-                            Toast.makeText(requireContext(), "Please verify your email address", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Please verify your email address",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
                         // If sign in fails, display a message to the user.
-                        Toast.makeText(requireContext(), task.exception?.message,
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(), task.exception?.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
         } else {
-            Toast.makeText(requireContext(), "Any feilds cannot be empty", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Any feilds cannot be empty", Toast.LENGTH_SHORT)
+                .show()
         }
     }
+
     private fun checkEmailAllowed() {
         val email = auth.currentUser?.email?.trim()
         val list: MutableList<String> = mutableListOf()
         database.reference.child("allow").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (user in snapshot.children) {
-                    if(!(email==user.value.toString().trim()))
-                    {
+                    if (!(email == user.value.toString().trim())) {
 
                         Mess(requireContext()).setIsMember(false)
 
-                    }
-                    else
-                    {
-                       Mess(requireContext()).setIsMember(true)
+                    } else {
+                        Mess(requireContext()).setIsMember(true)
                         break
                     }
                 }
@@ -266,27 +290,27 @@ class LoginInFragment : Fragment() {
 
             }
         })
-        Log.d("Yatin",list.toString())
+        Log.d("Yatin", list.toString())
 
 
     }
-    fun navigate()
-    {
-        database.reference.child("Users").child(auth.currentUser?.uid.toString()).child("details").addValueEventListener(object :ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.value==null) {
-                    findNavController().navigate(R.id.action_loginInFragment_to_userDetails)
+
+    fun navigate() {
+        database.reference.child("Users").child(auth.currentUser?.uid.toString()).child("details")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.value == null) {
+                        findNavController().navigate(R.id.action_loginInFragment_to_userDetails)
+                    } else {
+                        startActivity(Intent(requireContext(), MainActivity::class.java))
+                        requireActivity().finish()
+                    }
                 }
-                else{
-                    startActivity(Intent(requireContext(), MainActivity::class.java))
-                    requireActivity().finish()
+
+                override fun onCancelled(error: DatabaseError) {
+
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
+            })
     }
 }

@@ -14,10 +14,10 @@ import com.theayushyadav11.messease.models.AprMenu
 import com.theayushyadav11.myapplication.models.DayMenu
 
 class UploadMenuViewModel : ViewModel() {
-    val auth=FirebaseAuth.getInstance()
-    val database=FirebaseDatabase.getInstance().reference
+    val auth = FirebaseAuth.getInstance()
+    val database = FirebaseDatabase.getInstance().reference
     private val _menuList = MutableLiveData<List<AprMenu>>()
-    val t=MutableLiveData<String>()
+    val t = MutableLiveData<String>()
     val menuList: LiveData<List<AprMenu>> get() = _menuList
 
     init {
@@ -25,67 +25,58 @@ class UploadMenuViewModel : ViewModel() {
     }
 
     private fun fetchMenu() {
-            database.child("forApproval").addValueEventListener(object:ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val aprMenuList:MutableList<AprMenu> = mutableListOf()
-                    for(child in snapshot.children)
-                    {
-                        Log.d(TAG, child.value.toString())
-                       val aprMenu=child.getValue(AprMenu::class.java)
-                     aprMenu?.let { aprMenuList.add(aprMenu) }
-                        aprMenuList.sortByDescending { it.date }
-                    }
-                    _menuList.value=aprMenuList
+        database.child("forApproval").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val aprMenuList: MutableList<AprMenu> = mutableListOf()
+                for (child in snapshot.children) {
+                    Log.d(TAG, child.value.toString())
+                    val aprMenu = child.getValue(AprMenu::class.java)
+                    aprMenu?.let { aprMenuList.add(aprMenu) }
+                    aprMenuList.sortByDescending { it.date }
                 }
+                _menuList.value = aprMenuList
+            }
 
-                override fun onCancelled(error: DatabaseError) {
+            override fun onCancelled(error: DatabaseError) {
 
-                }
+            }
 
-            })
+        })
     }
- fun deleteApprove(key:String)
-    {
+
+    fun deleteApprove(key: String) {
         database.child("forApproval").child(key).removeValue().addOnCompleteListener {
-            if(it.isSuccessful)
-            {
-                t.value="Menu removed successfully"
-            }
-            else
-            {
-                t.value=it.exception?.message
+            if (it.isSuccessful) {
+                t.value = "Menu removed successfully"
+            } else {
+                t.value = it.exception?.message
             }
         }
     }
-    fun uploadMainMenu(menu:Menu2)
-    {
+
+    fun uploadMainMenu(menu: Menu2) {
         database.child("MainMenu").setValue(menu).addOnCompleteListener {
-            if(it.isSuccessful)
-            {
-                t.value="Menu uploaded successfully"
-            }
-            else
-            {
-                t.value=it.exception?.message
+            if (it.isSuccessful) {
+                t.value = "Menu uploaded successfully"
+            } else {
+                t.value = it.exception?.message
             }
         }
     }
-    fun uploadMainMenuUrl(url:String,onSucess:(String) -> Unit,onFailure:(String) -> Unit)
-    {
+
+    fun uploadMainMenuUrl(url: String, onSucess: (String) -> Unit, onFailure: (String) -> Unit) {
         database.child("MainMenuUrl").setValue(url).addOnCompleteListener {
-            if(it.isSuccessful)
-            {
+            if (it.isSuccessful) {
                 onSucess("Sucessfully uploaded")
-            }
-            else
-            {
+            } else {
                 onFailure(it.exception?.message.toString())
             }
         }
     }
 
 }
+
 data class Menu2(
-    val id:String="",
-    val menu:DayMenu= DayMenu()
+    val id: String = "",
+    val menu: DayMenu = DayMenu()
 )

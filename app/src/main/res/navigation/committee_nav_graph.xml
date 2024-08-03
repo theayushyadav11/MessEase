@@ -9,7 +9,7 @@
         android:id="@+id/mcMAin"
         android:name="com.theayushyadav11.messease.messCommitteeFragments.McMAin"
         android:label="fragment_mc_m_ain"
-        tools:layout="@layout/fragment_mc_main" >
+        tools:layout="@layout/fragment_mc_main">
         <action
             android:id="@+id/action_mcMAin_to_mcMenu"
             app:destination="@id/mcMenu" />
@@ -18,7 +18,7 @@
         android:id="@+id/mcMenu"
         android:name="com.theayushyadav11.messease.messCommitteeFragments.McMenu"
         android:label="fragment_mc_menu"
-        tools:layout="@layout/fragment_mc_menu" >
+        tools:layout="@layout/fragment_mc_menu">
 
     </fragment>
 </navigation>

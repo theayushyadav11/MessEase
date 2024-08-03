@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-
-
-
-<com.google.android.material.card.MaterialCardView
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginBottom="25dp"
-    android:layout_marginHorizontal="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:strokeColor="@color/food"
+    android:layout_marginHorizontal="5dp"
+    android:layout_marginBottom="25dp"
     android:elevation="0dp"
-    app:strokeWidth="2dp"
-    app:cardCornerRadius="12dp">
+    app:cardCornerRadius="12dp"
+    app:strokeColor="@color/food"
+    app:strokeWidth="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -49,11 +45,11 @@
             android:id="@+id/other"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
             android:paddingStart="13dp"
             android:textColor="#201F1F"
             android:textSize="15dp"
             android:textStyle="bold"
-            android:layout_marginVertical="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view3"
             app:layout_constraintTop_toBottomOf="@+id/name" />
@@ -62,8 +58,8 @@
             android:id="@+id/imageView4"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="13dp"
             android:layout_marginVertical="15dp"
+            android:layout_marginStart="13dp"
             android:src="@drawable/baseline_access_time_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view3"
@@ -88,33 +84,34 @@
             android:id="@+id/linearLayout2"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:orientation="horizontal"
             android:background="@drawable/dbg2"
-            >
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
-                android:padding="10dp"
-                android:background="@drawable/ripple"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/baseline_file_open_24"
-/>
+                android:background="@drawable/ripple"
+                android:padding="10dp"
+                android:src="@drawable/baseline_file_open_24" />
         </LinearLayout>
+
         <LinearLayout
-            android:background="@drawable/dbg"
             android:id="@+id/linearLayout3"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/dbg"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:orientation="horizontal">
+            app:layout_constraintEnd_toEndOf="parent">
+
             <ImageView
-                android:background="@drawable/ripple"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/baseline_delete_24menu"/>
+                android:background="@drawable/ripple"
+                android:padding="10dp"
+                android:src="@drawable/baseline_delete_24menu" />
 
         </LinearLayout>
 

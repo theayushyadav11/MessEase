@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
 
     android:layout_height="match_parent"
 
-    android:paddingTop="25dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="25dp">
 
 
-<com.google.android.material.button.MaterialButton
-    android:id="@+id/next"
-    android:layout_margin="25dp"
-    android:layout_width="80dp"
-    android:layout_height="80dp"
-    android:text="Next"
-    app:cornerRadius="25dp"
-    android:textColor="@color/white"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/next"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="25dp"
+        android:text="Next"
+        android:textColor="@color/white"
+        app:cornerRadius="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
     <ScrollView
-        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:scrollbars="none"
-
         android:layout_height="match_parent"
-        android:id="@+id/main">
+
+        android:scrollbars="none"
+        app:layout_constraintStart_toStartOf="parent">
 
         <HorizontalScrollView
             android:id="@+id/hh"
@@ -737,10 +735,6 @@ bread, butter/jam"
             <!--            </LinearLayout>-->
         </HorizontalScrollView>
     </ScrollView>
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

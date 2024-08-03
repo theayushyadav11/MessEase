@@ -65,21 +65,21 @@ dependencies {
 
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
 
     val room_version = "2.6.1" // Check for the latest version
-    implementation ("androidx.room:room-runtime:$room_version")
-    kapt ("androidx.room:room-compiler:$room_version")
-    implementation ("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
     implementation("com.google.code.gson:gson:2.8.8")
 
 
-    implementation ("com.google.android.gms:play-services-auth:20.1.0")
-    implementation ("com.github.bumptech.glide:glide:4.13.2")
-    kapt ("com.github.bumptech.glide:compiler:4.13.2")
+    implementation("com.google.android.gms:play-services-auth:20.1.0")
+    implementation("com.github.bumptech.glide:glide:4.13.2")
+    kapt("com.github.bumptech.glide:compiler:4.13.2")
 
-    implementation ("com.github.bumptech.glide:glide:4.13.2")
-    kapt ("com.github.bumptech.glide:compiler:4.13.2")
+    implementation("com.github.bumptech.glide:glide:4.13.2")
+    kapt("com.github.bumptech.glide:compiler:4.13.2")
     implementation("io.github.chaosleung:pinview:1.4.4")
 
 

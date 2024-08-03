@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/mcMain2"
         android:name="com.theayushyadav11.messease.messCommitteeFragments.McMAin"
-        android:label="McMAin" >
+        android:label="McMAin">
         <action
             android:id="@+id/action_mcMain2_to_mcMenu2"
             app:destination="@id/mcMenu2" />
@@ -31,7 +31,7 @@
         android:id="@+id/createPoll"
         android:name="com.theayushyadav11.messease.messCommitteeFragments.CreatePoll"
         android:label="fragment_create_poll"
-        tools:layout="@layout/fragment_create_poll" >
+        tools:layout="@layout/fragment_create_poll">
         <action
             android:id="@+id/action_createPoll_to_mcMain2"
             app:destination="@id/mcMain2" />
@@ -43,7 +43,7 @@
         tools:layout="@layout/fragment_upload_menu" />
     <fragment
         android:id="@+id/msgFragment"
-        android:name="com.theayushyadav11.messease.messCommitteeFragments.MsgFragment"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.McMsg"
         android:label="fragment_msg"
         tools:layout="@layout/fragment_msg" />
 </navigation>

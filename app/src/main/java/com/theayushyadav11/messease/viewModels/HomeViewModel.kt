@@ -90,7 +90,7 @@ class HomeViewModel() : ViewModel() {
                 val pollList: MutableList<Poll> = mutableListOf()
                 var lastKey: String = ""
                 for (i in snapshot.children) {
-                    lastKey=i.key.toString()
+                    lastKey = i.key.toString()
                 }
                 for (i in snapshot.children) {
                     val poll = i.getValue(Poll::class.java)
@@ -103,8 +103,7 @@ class HomeViewModel() : ViewModel() {
 
                             if (check)
                                 pollList.add(poll)
-                            if(i.key==lastKey)
-                            {
+                            if (i.key == lastKey) {
                                 onSuccess(pollList)
                             }
                         }, onFailure = {

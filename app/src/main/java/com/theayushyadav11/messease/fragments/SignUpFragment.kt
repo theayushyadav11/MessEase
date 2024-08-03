@@ -1,28 +1,28 @@
 package com.theayushyadav11.messease.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.FragmentSignUpBinding
 
 class SignUpFragment : Fragment() {
- private lateinit var binding:FragmentSignUpBinding
- private lateinit var auth: FirebaseAuth
- private lateinit var email: String
- private lateinit var password: String
-override  fun onCreateView(
+    private lateinit var binding: FragmentSignUpBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var email: String
+    private lateinit var password: String
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding=FragmentSignUpBinding.inflate(layoutInflater,container,false)
+        binding = FragmentSignUpBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -36,9 +36,9 @@ override  fun onCreateView(
     }
 
     private fun initialise() {
-        auth=FirebaseAuth.getInstance()
-         email = binding.etEmail.text.toString().trim()
-         password = binding.etPassword.text.toString().trim()
+        auth = FirebaseAuth.getInstance()
+        email = binding.etEmail.text.toString().trim()
+        password = binding.etPassword.text.toString().trim()
     }
 
     fun animate() {
@@ -46,16 +46,16 @@ override  fun onCreateView(
         val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.top_to_bottom)
         imageView.startAnimation(animation)
     }
-    fun listeners()
-    {
-        binding.verify.setOnClickListener{
-           // sendOtp(binding.etEmail.text.toString().trim())
+
+    fun listeners() {
+        binding.verify.setOnClickListener {
+            // sendOtp(binding.etEmail.text.toString().trim())
             email = binding.etEmail.text.toString().trim()
             password = binding.etPassword.text.toString().trim()
-            registerUser(email,password)
+            registerUser(email, password)
 
         }
-        binding.tvSignUp.setOnClickListener{
+        binding.tvSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_signUpFragment_to_loginInFragment)
         }
     }
@@ -86,22 +86,29 @@ override  fun onCreateView(
                     sendVerificationEmail()
                 } else {
                     // If sign in fails, display a message to the user.
-                    Toast.makeText(requireContext(), task.exception?.message,
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(), task.exception?.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }
+
     private fun sendVerificationEmail() {
         val user = auth.currentUser
         user?.sendEmailVerification()
             ?.addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(requireContext(), "Verification email sent to ${user.email}",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(), "Verification email sent to ${user.email}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     findNavController().navigate(R.id.action_signUpFragment_to_loginInFragment)
                 } else {
-                    Toast.makeText(requireContext(), "Failed to send verification email.",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(), "Failed to send verification email.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }

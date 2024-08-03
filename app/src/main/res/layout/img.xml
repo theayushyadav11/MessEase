@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/img"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_margin="2dp"
+    android:layout_weight="1"
+    android:scaleType="centerCrop"
+    android:src="@drawable/baseline_add_a_photo_24">
+
+</ImageView>

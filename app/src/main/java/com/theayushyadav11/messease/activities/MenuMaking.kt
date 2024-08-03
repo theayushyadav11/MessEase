@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.ActivityMenuMakingBinding
 import com.theayushyadav11.messease.databinding.EditDialogBinding
 import com.theayushyadav11.messease.utils.Mess
@@ -42,7 +41,7 @@ class MenuMaking : AppCompatActivity() {
     private lateinit var mess: Mess
     private var texts: MutableList<MutableList<TextView>> = mutableListOf()
     private var isClicked = false
-    private lateinit var currentMenu:Menu
+    private lateinit var currentMenu: Menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +55,15 @@ class MenuMaking : AppCompatActivity() {
     }
 
     private fun askPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
@@ -80,8 +86,8 @@ class MenuMaking : AppCompatActivity() {
         if (requestCode == REQUEST_CODE) {
 
 
-                setupNextButtonListener()
-            }
+            setupNextButtonListener()
+        }
 
         isClicked = false
     }
@@ -257,7 +263,7 @@ class MenuMaking : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val menu = dao.getMenu()
             withContext(Dispatchers.Main) {
-                currentMenu=menu
+                currentMenu = menu
                 updateUi(menu)
             }
         }
@@ -297,7 +303,7 @@ class MenuMaking : AppCompatActivity() {
             menu.menu.list[5],
             menu.menu.list[6],
 
-        )
+            )
         var editedMenu: Menu
         var dayMenu: MutableList<MutableList<Particulars>> = mutableListOf()
         for (i in 0 until texts[0].size) {
@@ -320,7 +326,20 @@ class MenuMaking : AppCompatActivity() {
             dayMenu.add(list)
             mess.log("space")
         }
-        editedMenu = Menu("edited", DayMenu(listOf( dayMenu[0], dayMenu[1], dayMenu[2], dayMenu[3], dayMenu[4], dayMenu[5], dayMenu[6])))
+        editedMenu = Menu(
+            "edited",
+            DayMenu(
+                listOf(
+                    dayMenu[0],
+                    dayMenu[1],
+                    dayMenu[2],
+                    dayMenu[3],
+                    dayMenu[4],
+                    dayMenu[5],
+                    dayMenu[6]
+                )
+            )
+        )
 
 
         return editedMenu

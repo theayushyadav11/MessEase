@@ -4,10 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,10 +14,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.adapters.PollsAdapter
 import com.theayushyadav11.messease.databinding.FragmentPollsBinding
-import com.theayushyadav11.messease.models.Option
 import com.theayushyadav11.messease.models.Poll
 import com.theayushyadav11.messease.utils.Mess
 import com.theayushyadav11.messease.viewModels.McMenuViewModel
@@ -57,7 +51,7 @@ class PollsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        pollsAdapter = PollsAdapter(pollsList,requireContext())
+        pollsAdapter = PollsAdapter(pollsList, requireContext())
         binding.rv.apply {
             adapter = pollsAdapter
             layoutManager = LinearLayoutManager(context)
@@ -70,9 +64,8 @@ class PollsFragment : Fragment() {
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val pollIds = snapshot.children.mapNotNull { it.value?.toString() }
-                    if(pollIds.size==0)
-                    {
-                        binding.msg.isVisible=true
+                    if (pollIds.size == 0) {
+                        binding.msg.isVisible = true
                         return
                     }
                     mess.log(pollIds)
@@ -92,8 +85,7 @@ class PollsFragment : Fragment() {
                     if (poll != null) {
                         pollsList.add(poll)
                         pollsList.sortByDescending { it.comp }
-                    }
-                    else{
+                    } else {
                         println("lund lelo")
                     }
                     if (pollsList.size == ids.size) {

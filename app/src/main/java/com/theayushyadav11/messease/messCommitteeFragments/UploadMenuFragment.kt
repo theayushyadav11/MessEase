@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -69,13 +68,10 @@ class UploadMenuFragment : Fragment() {
 
     fun set(menuList: List<AprMenu>) {
         binding.adder.removeAllViews()
-        if(menuList.size==0)
-        {
-            binding.message.isVisible=true
-        }
-        else
-        {
-            binding.message.isVisible=false
+        if (menuList.size == 0) {
+            binding.message.isVisible = true
+        } else {
+            binding.message.isVisible = false
         }
         for (menuDetail in menuList) {
             val view = LayoutInflater.from(requireContext())
@@ -104,11 +100,10 @@ class UploadMenuFragment : Fragment() {
                 builder.show()
 
             }
-            val dateTime=menuDetail.displayDate
+            val dateTime = menuDetail.displayDate
 
             view.findViewById<TextView>(R.id.foodTimeing).text = dateTime
-            view.findViewById<LinearLayout>(R.id.linearLayout2).setOnClickListener{
-
+            view.findViewById<LinearLayout>(R.id.linearLayout2).setOnClickListener {
 
 
                 val builder = AlertDialog.Builder(requireContext())
@@ -116,8 +111,8 @@ class UploadMenuFragment : Fragment() {
                 builder.setCancelable(false)
                 builder.setMessage("Are you sure you want upload a new Menu?")
                 builder.setPositiveButton("Yes") { dialog, which ->
-                    val uri=Uri.parse(menuDetail.url)
-                    FireBase().uploadPdfToFirebase(1,uri,"", onSuccess = {
+                    val uri = Uri.parse(menuDetail.url)
+                    FireBase().uploadPdfToFirebase(1, uri, "", onSuccess = {
                         viewModel.uploadMainMenuUrl(it, onSucess = {}, onFailure = {
                             mess.toast(it)
                             mess.log(it)
@@ -138,13 +133,13 @@ class UploadMenuFragment : Fragment() {
 
             }
 
-          view.setOnClickListener{
-              val pdfUrl = menuDetail.url
-              val uri=(Uri.parse(pdfUrl))
-              val intent = Intent(Intent.ACTION_VIEW, uri)
-              intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-              startActivity(intent)
-          }
+            view.setOnClickListener {
+                val pdfUrl = menuDetail.url
+                val uri = (Uri.parse(pdfUrl))
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            }
 
 
 
@@ -152,9 +147,9 @@ class UploadMenuFragment : Fragment() {
 
         }
     }
-    fun toast()
-    {
-        viewModel.t.observe(viewLifecycleOwner){
+
+    fun toast() {
+        viewModel.t.observe(viewLifecycleOwner) {
             mess.toast(it)
         }
     }

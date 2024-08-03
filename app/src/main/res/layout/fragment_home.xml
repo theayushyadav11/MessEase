@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/month"
 
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="JULY 2024"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:text="JULY 2024"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/Title"
-        android:paddingStart="13sp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center_vertical"
+        android:paddingStart="13sp"
         android:text="Mess Menu"
         android:textColor="@color/food"
         android:textSize="28sp"
@@ -79,17 +79,13 @@
         >
 
         <LinearLayout
-            android:paddingTop="20dp"
             android:id="@+id/adder"
-            android:paddingBottom="170dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-           android:layout_marginHorizontal="13dp"
-            android:orientation="vertical">
-
-
-
-
+            android:layout_marginHorizontal="13dp"
+            android:orientation="vertical"
+            android:paddingTop="20dp"
+            android:paddingBottom="170dp">
 
 
         </LinearLayout>

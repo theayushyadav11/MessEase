@@ -5,13 +5,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,18 +18,17 @@ import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.utils.Mess
 import com.theayushyadav11.messease.viewModels.Menu2
 import com.theayushyadav11.myapplication.database.MenuDatabase
-import com.theayushyadav11.myapplication.models.DayMenu
 import com.theayushyadav11.myapplication.models.Menu
-import com.theayushyadav11.myapplication.models.Particulars
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class SplashScreen : AppCompatActivity() {
 
     private lateinit var imageView: ImageView
-    private lateinit var auth:FirebaseAuth
-    companion object{
-        var isOpened=0
+    private lateinit var auth: FirebaseAuth
+
+    companion object {
+        var isOpened = 0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,19 +40,16 @@ class SplashScreen : AppCompatActivity() {
         database()
 
         imageView = findViewById(R.id.imageViewLogo)
-        auth=FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         val fadeAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_out)
         imageView.startAnimation(fadeAnimation)
-               Handler().postDelayed(Runnable {
+        Handler().postDelayed(Runnable {
 
             checkFirst()
-            if(FirebaseAuth.getInstance().currentUser?.isEmailVerified == true)
-            {
-              navigate()
-            }
-            else
-            {
+            if (FirebaseAuth.getInstance().currentUser?.isEmailVerified == true) {
+                navigate()
+            } else {
                 val i = Intent(this@SplashScreen, LoginSignUp::class.java)
                 FirebaseAuth.getInstance().signOut()
                 startActivity(i)
@@ -64,37 +57,34 @@ class SplashScreen : AppCompatActivity() {
             }
 
 
-
         }, 1000)
 
 
     }
-    fun database()
-    {
+
+    fun database() {
         val db = MenuDatabase.getDatabase(this)
         val menuDao = db.menuDao()
-          FirebaseDatabase.getInstance().reference.child("MainMenu").addValueEventListener(object :ValueEventListener{
-              override fun onDataChange(snapshot: DataSnapshot) {
-                   val m=snapshot.getValue(Menu2::class.java)
-                  val menu= m?.let { Menu2(id="1", menu = it.menu,) }
-                  GlobalScope.launch {
-                      if (menu != null) {
-                          menuDao.addMenu(Menu(id=menu.id, menu=menu.menu))
-                      }
-                  }
-                  }
+        FirebaseDatabase.getInstance().reference.child("MainMenu")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val m = snapshot.getValue(Menu2::class.java)
+                    val menu = m?.let { Menu2(id = "1", menu = it.menu) }
+                    GlobalScope.launch {
+                        if (menu != null) {
+                            menuDao.addMenu(Menu(id = menu.id, menu = menu.menu))
+                        }
+                    }
+                }
 
-              override fun onCancelled(error: DatabaseError) {
-navigate()
-              }
+                override fun onCancelled(error: DatabaseError) {
+                    navigate()
+                }
 
-          })
+            })
 
 
     }
-
-
-
 
 
     object AppPreferences {
@@ -116,8 +106,8 @@ navigate()
             editor.apply()
         }
     }
-    fun checkFirst()
-    {
+
+    fun checkFirst() {
         if (AppPreferences.isFirstTimeLaunch(this)) {
             // Perform the necessary actions for the first time launch
             //Toast.makeText(this, "Welcome to the app!", Toast.LENGTH_LONG).show()
@@ -129,25 +119,25 @@ navigate()
             //Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show()
         }
     }
-    fun navigate()
-    {
-        FirebaseDatabase.getInstance().reference.child("Users").child(auth.currentUser?.uid.toString()).child("details").addValueEventListener(object :
+
+    fun navigate() {
+        FirebaseDatabase.getInstance().reference.child("Users")
+            .child(auth.currentUser?.uid.toString()).child("details").addValueEventListener(object :
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if(auth.currentUser!=null&&snapshot.value==null) {
-                    val i =Intent(this@SplashScreen,LoginSignUp::class.java)
-                    i.putExtra("ll",1)
+                if (auth.currentUser != null && snapshot.value == null) {
+                    val i = Intent(this@SplashScreen, LoginSignUp::class.java)
+                    i.putExtra("ll", 1)
                     startActivity(i)
                     finish()
-                }
-                else{
+                } else {
                     startActivity(Intent(this@SplashScreen, MainActivity::class.java))
-                  finish()
+                    finish()
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-              Mess(this@SplashScreen).toast("Network error!")
+                Mess(this@SplashScreen).toast("Network error!")
             }
 
         })

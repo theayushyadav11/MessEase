@@ -12,9 +12,9 @@ interface MenuDao {
     suspend fun addMenu(menu: Menu)
 
     @Query("SELECT *FROM menu Where id =\"1\"")
-    suspend fun getMenu():Menu
+    suspend fun getMenu(): Menu
 
     @Query("SELECT *FROM menu Where id =\"edited\"")
-    suspend fun getEditedMenu():Menu
+    suspend fun getEditedMenu(): Menu
 
 }

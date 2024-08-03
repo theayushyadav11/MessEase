@@ -13,7 +13,8 @@ import com.theayushyadav11.messease.R
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val contentTitle = intent.getStringExtra("title")
         val contentText = intent.getStringExtra("text")
         val notificationId = intent.getIntExtra("notificationId", 0)
@@ -22,7 +23,11 @@ class NotificationReceiver : BroadcastReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "daily_notification_channel"
             val channelName = "Daily Notifications"
-            val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH).apply {
+            val channel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
                 enableLights(true)
                 lightColor = Color.RED
                 enableVibration(true)

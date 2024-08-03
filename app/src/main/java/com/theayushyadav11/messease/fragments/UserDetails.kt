@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.room.util.findColumnIndexBySuffix
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -44,9 +42,6 @@ class UserDetails : Fragment() {
         addDetails()
 
 
-
-
-
     }
 
     fun initialize() {
@@ -58,31 +53,31 @@ class UserDetails : Fragment() {
     fun addDetails() {
 
 
-        binding.done.setOnClickListener{
-            val name=binding.etName.text.toString().trim()
-            val passingYear=binding.auto.text.toString().trim()
-            val gender=binding.autoGender.text.toString().trim()
-            val batch=binding.autoBatch.text.toString().trim()
-            if(name.isNotEmpty())
-            {
+        binding.done.setOnClickListener {
+            val name = binding.etName.text.toString().trim()
+            val passingYear = binding.auto.text.toString().trim()
+            val gender = binding.autoGender.text.toString().trim()
+            val batch = binding.autoBatch.text.toString().trim()
+            if (name.isNotEmpty()) {
                 mess.addPb("Adding Details...")
-                database.child("Users").child(auth.currentUser?.uid.toString()).child("details").child("name").setValue(name)
-                database.child("Users").child(auth.currentUser?.uid.toString()).child("details").child("passYear").setValue(passingYear)
-                database.child("Users").child(auth.currentUser?.uid.toString()).child("details").child("batch").setValue(batch)
-                database.child("Users").child(auth.currentUser?.uid.toString()).child("details").child("gender").setValue(gender).addOnCompleteListener {
-                    if (it.isSuccessful)
-                    {
+                database.child("Users").child(auth.currentUser?.uid.toString()).child("details")
+                    .child("name").setValue(name)
+                database.child("Users").child(auth.currentUser?.uid.toString()).child("details")
+                    .child("passYear").setValue(passingYear)
+                database.child("Users").child(auth.currentUser?.uid.toString()).child("details")
+                    .child("batch").setValue(batch)
+                database.child("Users").child(auth.currentUser?.uid.toString()).child("details")
+                    .child("gender").setValue(gender).addOnCompleteListener {
+                    if (it.isSuccessful) {
                         mess.toast("Added successfully")
                         mess.pbDismiss()
-                        startActivity(Intent(requireContext(),MainActivity::class.java))
+                        startActivity(Intent(requireContext(), MainActivity::class.java))
                         requireActivity().finish()
 
                     }
                     mess.pbDismiss()
                 }
-            }
-            else
-            {
+            } else {
                 mess.toast("Name cannot be empty!")
             }
         }
@@ -96,11 +91,12 @@ class UserDetails : Fragment() {
         binding.auto.setAdapter(adapter)
 
 
-        var listOfBatch = listOf("Btech","Mtech","M.B.A.","MSc","Phd")
+        var listOfBatch = listOf("Btech", "Mtech", "M.B.A.", "MSc", "Phd")
         val Batchadapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, listOfBatch)
         binding.autoBatch.setAdapter(Batchadapter)
 
-        val adapter2 = ArrayAdapter(requireContext(), R.layout.drop_down_item, listOf("Male","Female"))
+        val adapter2 =
+            ArrayAdapter(requireContext(), R.layout.drop_down_item, listOf("Male", "Female"))
         binding.autoGender.setAdapter(adapter2)
 
     }
