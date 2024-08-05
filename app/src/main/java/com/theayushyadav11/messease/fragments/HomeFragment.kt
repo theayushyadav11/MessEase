@@ -32,6 +32,7 @@ import com.theayushyadav11.messease.adapters.DateItem
 import com.theayushyadav11.messease.databinding.DailyMenuBinding
 import com.theayushyadav11.messease.databinding.FragmentHomeBinding
 import com.theayushyadav11.messease.models.Msg
+import com.theayushyadav11.messease.models.OptionSelected
 import com.theayushyadav11.messease.models.Poll
 import com.theayushyadav11.messease.utils.FireBase
 import com.theayushyadav11.messease.utils.Mess
@@ -188,7 +189,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         itemView.findViewById<TextView>(R.id.time).text = poll.time
 
         question.text = poll.question
-        name.text = poll.creater
+        name.text = poll.createrName
         binding.adder.addView(itemView)
         linearLayout.removeAllViews()
 
@@ -214,7 +215,8 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
                         var tv = 0
                         for (child in snapshot.children) {
                             tv++
-                            if (child.value.toString() == option)
+                            val optionSelected=child.getValue(OptionSelected::class.java)
+                            if (optionSelected?.selected == option)
                                 count++
                         }
                         val optPb = view.findViewById<ProgressBar>(R.id.ProgressBar)
@@ -236,8 +238,8 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
                 .addValueEventListener(
                     object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            //(snapshot)
-                            if (snapshot.value.toString().trim() == optTitle.text.trim()) {
+                            val optionSelected=snapshot.getValue(OptionSelected::class.java)
+                            if (optionSelected?.selected?.trim() == optTitle.text.trim()) {
                                 optRb.isChecked = true
 
                             } else
@@ -368,23 +370,10 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
     }
 
     fun optionSelect(uid: String, option: String) {
-
+        val selectedOption = OptionSelected(selected=option,time=mess.getCurrentTimeInAmPm(),date=mess.getCurrentDate(),)
         database.child("pollResult").child(uid).child(auth.currentUser?.uid.toString())
-            .setValue(option)
-        database.child("pollResult").child(uid).child(auth.currentUser?.uid.toString())
-            .addValueEventListener(
-                object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.value == null) {
-                            FireBase().incrementTotalVotes(uid) { value, e ->
-                                mess.toast(value.toString())
-                            }
-                        }
-                    }
+            .setValue(selectedOption)
 
-                    override fun onCancelled(error: DatabaseError) {
-                    }
-                })
 
 
     }

@@ -21,6 +21,10 @@
         <action
             android:id="@+id/action_mcMain2_to_msgFragment"
             app:destination="@id/msgFragment" />
+        <action
+            android:id="@+id/action_mcMain2_to_pollDetails"
+            app:destination="@id/pollDetails" />
+
     </fragment>
     <fragment
         android:id="@+id/mcMenu2"
@@ -46,4 +50,16 @@
         android:name="com.theayushyadav11.messease.messCommitteeFragments.McMsg"
         android:label="fragment_msg"
         tools:layout="@layout/fragment_msg" />
+    <fragment
+        android:id="@+id/pollDetails"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.PollDetails"
+        android:label="PollDetails" />
+    <fragment
+        android:id="@+id/pollsFragment"
+        android:name="com.theayushyadav11.messease.messCommitteeFragments.PollsFragment"
+        android:label="PollsFragment" >
+        <action
+            android:id="@+id/action_pollsFragment_to_pollDetails"
+            app:destination="@id/pollDetails" />
+    </fragment>
 </navigation>

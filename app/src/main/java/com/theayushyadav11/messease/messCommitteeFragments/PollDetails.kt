@@ -7,14 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.theayushyadav11.messease.databinding.FragmentPollDetailsBinding
+import com.theayushyadav11.messease.utils.Mess
 import com.theayushyadav11.messease.viewModels.PollDetailsViewModel
 
 class PollDetails : Fragment() {
     private lateinit var binding: FragmentPollDetailsBinding
+    private lateinit var mess:Mess
 
     companion object {
         fun newInstance() = PollDetails()
     }
+
 
     private val viewModel: PollDetailsViewModel by viewModels()
 
@@ -28,8 +31,12 @@ class PollDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+         initialize()
     }
 
-
+fun initialize()
+{
+    mess=Mess(requireContext())
+    binding.tvQuestion.text=mess.getPollId()
+}
 }

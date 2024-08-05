@@ -5,6 +5,7 @@ import java.util.Date
 data class Poll(
     val uid: String = "",
     val creater: String = "",
+    val createrName: String = "",
     val question: String = "",
     val comp: Date = Date(),
     val date: String = "",

@@ -89,7 +89,7 @@ mess=Mess(requireContext())
         Log.d("maneesh",msg.photos.toString())
         for( url in msg.photos)
         {
-            //(url)
+
             val img=LayoutInflater.from(requireContext()).inflate(R.layout.img,adder,false)
             Picasso.get()
                 .load(url)

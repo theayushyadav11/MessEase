@@ -17,10 +17,16 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.theayushyadav11.messease.R
+import com.theayushyadav11.messease.models.OptionSelected
 import com.theayushyadav11.messease.models.Poll
 
-class PollsAdapter(private val pollsList: MutableList<Poll>, private val context: Context) :
+class PollsAdapter(private val pollsList: MutableList<Poll>, private val context: Context
+, val listen:onViewVotes
+) :
     RecyclerView.Adapter<PollsAdapter.PollViewHolder>() {
+    interface onViewVotes{
+        fun onVotes(poll: Poll)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PollViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.poll_layout, parent, false)
@@ -44,6 +50,9 @@ class PollsAdapter(private val pollsList: MutableList<Poll>, private val context
             }
             builder.show()
         }
+        holder.viewVotes.setOnClickListener{
+            listen.onVotes(poll)
+        }
 
     }
 
@@ -52,11 +61,14 @@ class PollsAdapter(private val pollsList: MutableList<Poll>, private val context
         return pollsList.size
     }
 
-    class PollViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+   inner class PollViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val question: TextView = itemView.findViewById(R.id.tvQuestion)
         private val name: TextView = itemView.findViewById(R.id.tvname)
         private val linearLayout: LinearLayout = itemView.findViewById(R.id.radioGroup)
         val deleteButton: ImageView = itemView.findViewById(R.id.delete)
+        val viewVotes: TextView = itemView.findViewById(R.id.vw)
+
+
 
         fun bind(poll: Poll) {
             question.text = poll.question
@@ -86,7 +98,8 @@ class PollsAdapter(private val pollsList: MutableList<Poll>, private val context
                             var tv = 0
                             for (child in snapshot.children) {
                                 tv++
-                                if (child.value.toString() == option)
+                                val optionSelected=child.getValue(OptionSelected::class.java)
+                                if (optionSelected?.selected == option)
                                     count++
                             }
                             val optPb = view.findViewById<ProgressBar>(R.id.ProgressBar)

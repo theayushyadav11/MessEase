@@ -118,8 +118,6 @@ class CreatePoll : Fragment() {
             database.child("polls").child(key).setValue(poll).addOnCompleteListener {
                 if (it.isSuccessful) {
                     mess.toast("Poll added Successfully.")
-                    addToUser(key)
-
                 } else {
                     mess.toast("failed to add poll!")
                 }
@@ -131,12 +129,7 @@ class CreatePoll : Fragment() {
         }
     }
 
-    fun addToUser(key: String) {
-        database.child("Users").child(auth.currentUser?.uid.toString()).child("polls").push()
-            .setValue(key)
 
-
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getCurrentDateTime(): String {
@@ -236,6 +229,7 @@ class CreatePoll : Fragment() {
         }
         val poll = Poll(
             database.push().key.toString(),
+            auth.currentUser?.uid.toString(),
             auth.currentUser?.displayName.toString(),
             binding.tvQuestion.text.toString(),
             Date(),

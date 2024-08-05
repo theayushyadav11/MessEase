@@ -51,6 +51,15 @@ class Mess {
         return sharedPreferences.getString(key, "").toString()
     }
 
+    fun sendPollId(id: String)
+    {
+        save("pollId", id)
+    }
+
+    fun getPollId():String
+    {
+        return get("pollId")
+    }
     fun setIsMember(isMember: Boolean) {
         save("isMember", isMember.toString())
     }
