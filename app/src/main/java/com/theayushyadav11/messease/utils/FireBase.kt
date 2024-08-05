@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -13,6 +14,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.theayushyadav11.messease.models.Msg
+import com.theayushyadav11.messease.models.Poll
 
 class FireBase {
     val database = FirebaseDatabase.getInstance().reference
@@ -102,7 +104,7 @@ class FireBase {
         }
     }
 
-    fun deletePdfFromFirebase(
+    fun deleteFileFromUrl(
         pdfUrl: String,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
@@ -142,15 +144,18 @@ class FireBase {
     }
 
     fun uploadImages(
+        id:String,
         images: List<Uri>,
         onSuccess: (List<String>) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
+        if(images.isEmpty())
+            onSuccess(emptyList())
         val storage = FirebaseStorage.getInstance()
         val storageRef = storage.reference
         val imageUrls = mutableListOf<String>()
         images.forEachIndexed { index, uri ->
-            val imageRef = storageRef.child("MsgImages").child("image$index")
+            val imageRef = storageRef.child("MsgImages").child(id).child("image$index")
             val uploadTask = imageRef.putFile(uri)
             uploadTask.addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -174,5 +179,20 @@ class FireBase {
         }.addOnFailureListener {
             onFailure(it)
         }
+    }
+    fun getDetails(uid: String,onSuccess:(name: String,designation: String)->Unit)
+    {
+        database.child("Users").child(uid).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val name = snapshot.child("name").value.toString()
+                val designation = snapshot.child("designation").value.toString()
+                onSuccess(name,designation)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                onSuccess("","")
+            }
+
+        })
     }
 }

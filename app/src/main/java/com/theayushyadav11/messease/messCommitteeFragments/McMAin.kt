@@ -24,6 +24,7 @@ import com.theayushyadav11.messease.activities.MainActivity
 import com.theayushyadav11.messease.activities.MenuMaking
 import com.theayushyadav11.messease.adapters.ViewPagerAdapter
 import com.theayushyadav11.messease.databinding.FragmentMcMainBinding
+import com.theayushyadav11.messease.utils.FireBase
 import com.theayushyadav11.messease.utils.Mess
 
 
@@ -55,6 +56,10 @@ class McMAin : Fragment() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
         mess = Mess(requireContext())
+        FireBase().getDetails(auth.currentUser?.uid.toString()) { name, designation ->
+            binding.tvname.text = name
+            binding.tvDesignation.text = designation
+        }
         binding.tvname.text = auth.currentUser?.displayName
         binding.tvEmail.text = auth.currentUser?.email
 
@@ -66,7 +71,6 @@ class McMAin : Fragment() {
         }
 
         loadImage(auth.currentUser?.photoUrl)
-        designation()
         setTab()
     }
 
@@ -105,23 +109,7 @@ class McMAin : Fragment() {
         }
     }
 
-    fun designation(): String {
-        var v = ""
-        database.child("Users").child(auth.currentUser?.uid.toString()).child("designation")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.d("Designation", snapshot.toString())
-                    binding.tvDesignation.text = snapshot.value.toString()
-                    Log.d("Designation", v)
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Log.d("Designation", v)
-                }
-
-            })
-        return v
-    }
 
     fun setTab() {
         val adapter = ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
@@ -136,4 +124,6 @@ class McMAin : Fragment() {
             }
         }.attach()
     }
+
+
 }

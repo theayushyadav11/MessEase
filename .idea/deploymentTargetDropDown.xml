@@ -4,13 +4,35 @@
     <value>
       <entry key="app">
         <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\AYUSH YADAV\.android\avd\Pixel_7_Edited_API_34.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-08-04T11:27:21.302670500Z" />
+          <multipleDevicesSelectedInDropDown value="true" />
           <runningDeviceTargetsSelectedWithDialog>
             <Target>
               <type value="RUNNING_DEVICE_TARGET" />
               <deviceKey>
                 <Key>
+                  <type value="SERIAL_NUMBER" />
+                  <value value="ee08212b" />
+                </Key>
+              </deviceKey>
+            </Target>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\AYUSH YADAV\.android\avd\Pixel_5_API_34.avd" />
+                  <value value="C:\Users\AYUSH YADAV\.android\avd\Pixel_6_Pro_API_34_2.avd" />
                 </Key>
               </deviceKey>
             </Target>
@@ -21,7 +43,16 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\AYUSH YADAV\.android\avd\Pixel_5_API_34.avd" />
+                  <value value="C:\Users\AYUSH YADAV\.android\avd\Pixel_7_Edited_API_34.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\AYUSH YADAV\.android\avd\Pixel_6_Pro_API_34_2.avd" />
                 </Key>
               </deviceKey>
             </Target>

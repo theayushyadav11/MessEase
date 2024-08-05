@@ -10,6 +10,6 @@ data class Msg(
     val comp: Date = Date(),
     val title: String = "",
     val body: String = "",
-    val photos: List<String>,
+    val photos: List<String> = emptyList(),
     val target: String = "",
 )

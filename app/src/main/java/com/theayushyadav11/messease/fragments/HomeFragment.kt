@@ -1,5 +1,7 @@
 package com.theayushyadav11.messease.fragments
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,17 +18,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.adapters.DateAdapter
 import com.theayushyadav11.messease.adapters.DateItem
 import com.theayushyadav11.messease.databinding.DailyMenuBinding
 import com.theayushyadav11.messease.databinding.FragmentHomeBinding
+import com.theayushyadav11.messease.models.Msg
 import com.theayushyadav11.messease.models.Poll
 import com.theayushyadav11.messease.utils.FireBase
 import com.theayushyadav11.messease.utils.Mess
@@ -129,6 +134,17 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
 
     fun addELements(date: String) {
 
+        homeViewModel.getMsgs(date, onSuccess = {
+            binding.msgsAdder.removeAllViews()
+            for (msg in it) {
+                //(msg)
+                addMsg(msg)
+            }
+        },onFailure = {
+            //(it)
+
+        })
+
 
         homeViewModel.getPolls(date, onSuccess = {
             binding.adder.removeAllViews()
@@ -138,8 +154,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
             addFood(list)
 
         }, onFailure = {
-            addFood(list)
-            mess.log(it)
+            //(it)
         })
     }
 
@@ -221,7 +236,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
                 .addValueEventListener(
                     object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            mess.log(snapshot)
+                            //(snapshot)
                             if (snapshot.value.toString().trim() == optTitle.text.trim()) {
                                 optRb.isChecked = true
 
@@ -378,5 +393,53 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("/MM/yyyy", Locale.getDefault())
         return dateFormat.format(calendar.time)
+    }
+    fun addMsg(msg: Msg) {
+       val layout=LayoutInflater.from(requireContext()).inflate(R.layout.msg_layout,binding.adder,false)
+        val title=layout.findViewById<TextView>(R.id.title)
+        val body=layout.findViewById<TextView>(R.id.body)
+        val time=layout.findViewById<TextView>(R.id.time)
+        val creator=layout.findViewById<TextView>(R.id.creater)
+        val adder=layout.findViewById<LinearLayout>(R.id.adder)
+        title.text=msg.title
+        body.text=msg.body
+        time.text=msg.time
+        creator.text=msg.creater
+       Log.d("maneesh",msg.photos.toString())
+        for( url in msg.photos)
+        {
+            //(url)
+            val img=LayoutInflater.from(requireContext()).inflate(R.layout.img,adder,false)
+            Picasso.get()
+                .load(url)
+                .into(img.findViewById<ImageView>(R.id.img))
+            img.setOnClickListener{
+                showDialog(url)
+
+
+            }
+            adder.addView(img)
+        }
+
+        binding.msgsAdder.addView(layout)
+    }
+    private fun showDialog(url:String) {
+        // Inflate the custom layout
+        val inflater = LayoutInflater.from(requireContext())
+        val dialogView = inflater.inflate(R.layout.img, null)
+
+        // Create the AlertDialog
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+val img=dialogView.findViewById<ImageView>(R.id.img)
+        Picasso.get()
+            .load(url)
+            .into(img)
+
+img.setOnClickListener{
+    dialog.dismiss()
+}
+        dialog.show()
     }
 }

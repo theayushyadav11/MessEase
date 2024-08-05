@@ -47,19 +47,19 @@ class UploadMenuViewModel : ViewModel() {
     fun deleteApprove(key: String) {
         database.child("forApproval").child(key).removeValue().addOnCompleteListener {
             if (it.isSuccessful) {
-                t.value = "Menu removed successfully"
+
             } else {
                 t.value = it.exception?.message
             }
         }
     }
 
-    fun uploadMainMenu(menu: Menu2) {
+    fun uploadMainMenu(menu: Menu2,onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
         database.child("MainMenu").setValue(menu).addOnCompleteListener {
             if (it.isSuccessful) {
-                t.value = "Menu uploaded successfully"
+               onSuccess( "Menu uploaded successfully")
             } else {
-                t.value = it.exception?.message
+                onFailure( it.exception?.message.toString())
             }
         }
     }
@@ -72,6 +72,20 @@ class UploadMenuViewModel : ViewModel() {
                 onFailure(it.exception?.message.toString())
             }
         }
+    }
+    fun getMainMenuUrl(onSuccess: (String) -> Unit, onFailure: (String) -> Unit)
+    {
+        database.child("MainMenuUrl").addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+               onSuccess(snapshot.value.toString())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+             onFailure(error.message)
+            }
+
+        })
+
     }
 
 }

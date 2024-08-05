@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.FragmentAdminBinding
 import com.theayushyadav11.messease.models.User
+import com.theayushyadav11.messease.utils.Mess
 
 
 class AdminFragment : Fragment() {
@@ -27,6 +28,7 @@ class AdminFragment : Fragment() {
     private lateinit var databse: DatabaseReference
     private lateinit var designation: String
     private lateinit var pb: ProgressDialog
+    private lateinit var mess:Mess
     override fun onCreate(savedInstanceState: Bundle?) {
         context?.theme?.applyStyle(
             com.google.android.material.R.style.Theme_Material3_Light,
@@ -68,6 +70,7 @@ class AdminFragment : Fragment() {
 
     fun initialise() {
         auth = FirebaseAuth.getInstance()
+        mess=Mess(requireContext())
         databse = FirebaseDatabase.getInstance().reference
         spinner()
     }
@@ -104,10 +107,7 @@ class AdminFragment : Fragment() {
     }
 
     fun add() {
-        pb = ProgressDialog(requireContext())
-        pb.setMessage("Adding...")
-        pb.setCancelable(false)
-        pb.show()
+       mess.addPb("Adding a $designation...")
         val email = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString().trim()
         val name = binding.etName.text.toString().trim()
@@ -145,27 +145,39 @@ class AdminFragment : Fragment() {
 
 
     private fun registerUser(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
-                    // Registration successful, send verification email
                     sendVerificationEmail()
                     display("User created successfully")
                     addOnDatabase(email, password, binding.etName.text.toString().trim())
                     signOut()
+                    auth.signInWithEmailAndPassword("lit2023049@iiitl.ac.in","ayush1234").
+                        addOnCompleteListener{
+                            if(it.isSuccessful)
+                            {
+                                mess.pbDismiss()
+                                display("Added Successfully")
+                            }
+                            else
+                            {
+                                mess.pbDismiss()
+                                display("Failed to sign in")
+                            }
+                        }
                     binding.etEmail.setText("")
                     binding.etPassword.setText("")
                     binding.etName.setText("")
 
 
                 } else {
-                    // If sign in fails, display a message to the user.
+
                     Toast.makeText(
                         requireContext(), task.exception?.message,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                pb.dismiss()
+                mess.pbDismiss()
             }
     }
 

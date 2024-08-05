@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.theayushyadav11.messease.models.Msg
 import com.theayushyadav11.messease.models.Poll
 import com.theayushyadav11.myapplication.models.Menu
 import com.theayushyadav11.myapplication.models.Particulars
@@ -122,5 +123,47 @@ class HomeViewModel() : ViewModel() {
 
         })
     }
+    fun getMsgs(
+        date: String,
+        onSuccess: (msgs: List<Msg>) -> Unit,
+        onFailure: (error: String) -> Unit
+    ) {
+        database.child("Messages").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val msgList: MutableList<Msg> = mutableListOf()
+                var lastKey: String = ""
+                for (i in snapshot.children) {
+                    lastKey = i.key.toString()
+                }
+                for (i in snapshot.children) {
+                    val poll = i.getValue(Msg::class.java)
+                    if (poll != null) {
+                        getTarget(poll.uid, onSuccess = {
+                            val check =
+                                poll.target.contains(it[0]) && poll.target.contains(it[1]) && poll.target.contains(
+                                    it[2]
+                                ) && poll.date == date
 
+                            if (check)
+                                msgList.add(poll)
+                            if (i.key == lastKey) {
+                                onSuccess(msgList)
+                                Log.d("yatn", msgList.toString())
+                            }
+                        }, onFailure = {
+                            onFailure("Some Error occurred")
+                        })
+                    }
+                }
+                Log.d("yatn", msgList.toString())
+                onSuccess(msgList)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                onFailure(error.message)
+            }
+
+        })
+    }
 }

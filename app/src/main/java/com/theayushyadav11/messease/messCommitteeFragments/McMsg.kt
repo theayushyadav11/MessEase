@@ -108,24 +108,32 @@ class McMsg : Fragment() {
 
     fun send(target: String) {
         val uid = dataBase.push().key.toString()
-        val creater = auth.uid.toString()
+        val creater = auth.currentUser?.displayName.toString()
         val time = mess.getCurrentTimeInAmPm()
         val date = mess.getCurrentDate()
         val title = binding.tvQuestion.text.toString()
         val body = binding.tvBody.text.toString()
         if (title.isNotEmpty() && body.isNotEmpty()) {
-            FireBase().uploadImages(listOfImages, onSuccess = {
+            mess.addPb("Posting message...")
+            FireBase().uploadImages(uid,listOfImages, onSuccess = {
                 val photos = it
                 val msg = Msg(uid, creater, time, date, Date(), title, body, photos, target)
                 FireBase().addMsg(msg, onSuccess = {
                     mess.toast("Message Sent")
-                    findNavController().navigateUp()
+                    try {
+                        findNavController().navigateUp()
+                        mess.pbDismiss()
+                    } catch (e: Exception) {
+                        mess.pbDismiss()
+                    }
                 },
                     onFailure = {
                         mess.toast(it.message.toString())
+                        mess.pbDismiss()
                     })
             }, onFailure = {
                 mess.toast(it.message.toString())
+                mess.pbDismiss()
             })
         } else {
             mess.toast("Parameters cannot be empty!")

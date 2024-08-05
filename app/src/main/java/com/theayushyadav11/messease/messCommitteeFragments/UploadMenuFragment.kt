@@ -20,6 +20,11 @@ import com.theayushyadav11.messease.models.AprMenu
 import com.theayushyadav11.messease.utils.FireBase
 import com.theayushyadav11.messease.utils.Mess
 import com.theayushyadav11.messease.viewModels.UploadMenuViewModel
+import com.theayushyadav11.myapplication.database.MenuDatabase
+import com.theayushyadav11.myapplication.models.Menu
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class UploadMenuFragment : Fragment() {
     private lateinit var binding: FragmentUploadMenuBinding
@@ -85,7 +90,7 @@ class UploadMenuFragment : Fragment() {
                 builder.setMessage("Are you sure you want to delete? \n This cannot be undone!.")
                 builder.setPositiveButton("Ok") { dialog, which ->
                     viewModel.deleteApprove(menuDetail.id)
-                    FireBase().deletePdfFromFirebase(menuDetail.url, onSuccess = {
+                    FireBase().deleteFileFromUrl(menuDetail.url, onSuccess = {
                         mess.toast("Deleted successfully")
                     }, onFailure = {
                         mess.toast("Failed to delete menu")
@@ -111,18 +116,34 @@ class UploadMenuFragment : Fragment() {
                 builder.setCancelable(false)
                 builder.setMessage("Are you sure you want upload a new Menu?")
                 builder.setPositiveButton("Yes") { dialog, which ->
-                    val uri = Uri.parse(menuDetail.url)
-                    FireBase().uploadPdfToFirebase(1, uri, "", onSuccess = {
-                        viewModel.uploadMainMenuUrl(it, onSucess = {}, onFailure = {
-                            mess.toast(it)
-                            mess.log(it)
-                        })
+                    mess.addPb("Uploading Menu...")
+                    FireBase().deleteFileFromUrl(menuDetail.url, onSuccess = {
+                        viewModel.uploadMainMenu(menuDetail.menu!!,
+                        onSuccess={
+                            viewModel.deleteApprove(menuDetail.id)
+                            mess.pbDismiss()
+                            viewModel.t.value = "Menu uploaded successfully"
+                            GlobalScope.launch(Dispatchers.IO)
+                            {
+                                val database=MenuDatabase.getDatabase(requireContext()).menuDao()
+                                database.addMenu(Menu(id="1",menu=menuDetail.menu.menu))
+                            }
+                        }, onFailure = {
+                                mess.toast(it)
+                                mess.pbDismiss()
+                        } )
+
                     }, onFailure = {
-                        mess.toast(it.toString())
-                        mess.log(it)
+                        mess.toast(it.message.toString())
+                        mess.pbDismiss()
                     })
-                    viewModel.deleteApprove(menuDetail.id)
-                    menuDetail.menu?.let { it1 -> viewModel.uploadMainMenu(it1) }
+
+
+
+
+
+
+
 
                     dialog.dismiss()
                 }

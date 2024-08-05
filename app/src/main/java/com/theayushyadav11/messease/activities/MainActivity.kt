@@ -18,6 +18,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.ActivityMainBinding
+import com.theayushyadav11.messease.utils.Mess
 
 
 class MainActivity : AppCompatActivity() {
@@ -70,6 +71,11 @@ class MainActivity : AppCompatActivity() {
         val menu: Menu = navView.menu
         val menuItem1 = menu.findItem(R.id.nav_messCommitteeActivity)
         val menuItem2 = menu.findItem(R.id.loggedin)
+        val menuItem3 = menu.findItem(R.id.nav_admin)
+        if (FirebaseAuth.getInstance().currentUser?.email == "lit2023049@iiitl.ac.in")
+        {
+            menuItem3.isVisible = true
+        }
 
         if (FirebaseAuth.getInstance().currentUser == null) {
             menuItem1.isVisible = true
@@ -105,7 +111,10 @@ class MainActivity : AppCompatActivity() {
 
                     true
                 }
-
+                R.id.nav_download->{
+                    Mess(this).toast("Abhi ye feature add nhi hua hai")
+                    true
+                }
                 else -> {
                     navController.navigate(menuItem.itemId)
                     drawerLayout.closeDrawers()
