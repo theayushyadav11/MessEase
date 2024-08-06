@@ -86,8 +86,8 @@ class Mess {
         progressDialog.dismiss()
     }
 
-    fun toast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    fun toast(message: Any) {
+        Toast.makeText(context, message.toString(), Toast.LENGTH_SHORT).show()
     }
 
     fun log(message: Any) {

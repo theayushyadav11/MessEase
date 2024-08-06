@@ -44,12 +44,12 @@ class UploadMenuViewModel : ViewModel() {
         })
     }
 
-    fun deleteApprove(key: String) {
+    fun deleteApprove(key: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
         database.child("forApproval").child(key).removeValue().addOnCompleteListener {
             if (it.isSuccessful) {
-
+                onSuccess("Deleted")
             } else {
-                t.value = it.exception?.message
+                onFailure(it.exception?.message.toString())
             }
         }
     }
@@ -64,18 +64,21 @@ class UploadMenuViewModel : ViewModel() {
         }
     }
 
-    fun uploadMainMenuUrl(url: String, onSucess: (String) -> Unit, onFailure: (String) -> Unit) {
-        database.child("MainMenuUrl").setValue(url).addOnCompleteListener {
-            if (it.isSuccessful) {
-                onSucess("Sucessfully uploaded")
-            } else {
-                onFailure(it.exception?.message.toString())
+    fun uploadMainMenuUrl(url: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
+        database.child("ayush").setValue(url).addOnCompleteListener {
+            if(it.isSuccessful) {
+                onSuccess( "Menu uploaded successfully")
+            }
+            else
+            {
+                onFailure( it.exception?.message.toString())
             }
         }
+
     }
     fun getMainMenuUrl(onSuccess: (String) -> Unit, onFailure: (String) -> Unit)
     {
-        database.child("MainMenuUrl").addValueEventListener(object :ValueEventListener{
+        database.child("ayush").addListenerForSingleValueEvent(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                onSuccess(snapshot.value.toString())
             }
@@ -87,6 +90,7 @@ class UploadMenuViewModel : ViewModel() {
         })
 
     }
+
 
 }
 

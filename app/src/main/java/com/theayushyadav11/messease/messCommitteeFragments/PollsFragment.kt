@@ -20,7 +20,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.theayushyadav11.messease.R
-import com.theayushyadav11.messease.adapters.PollsAdapter
 import com.theayushyadav11.messease.databinding.FragmentPollsBinding
 import com.theayushyadav11.messease.models.Poll
 import com.theayushyadav11.messease.utils.Mess
@@ -33,7 +32,7 @@ class PollsFragment : Fragment() {
     private lateinit var database: DatabaseReference
     private lateinit var mess: Mess
     private val pollsList = mutableListOf<Poll>()
-    private lateinit var pollsAdapter: PollsAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -89,10 +88,6 @@ class PollsFragment : Fragment() {
 
 
     fun addPoll(poll: Poll) {
-
-        mess.log("added again")
-
-
         val pollLayout = LayoutInflater.from(requireActivity())
             .inflate(R.layout.poll_layout, binding.adder, false)
         val question = pollLayout.findViewById<TextView>(R.id.tvQuestion)
@@ -112,7 +107,7 @@ class PollsFragment : Fragment() {
             findNavController().navigate(R.id.action_mcMain2_to_pollDetails)
         }
         addOptins(optionAdder, poll.options, poll.uid)
-        mess.log("added again")
+
         binding.adder.addView(pollLayout)
 
     }

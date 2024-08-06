@@ -12,12 +12,14 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.FragmentSignUpBinding
+import com.theayushyadav11.messease.utils.Mess
 
 class SignUpFragment : Fragment() {
     private lateinit var binding: FragmentSignUpBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var email: String
     private lateinit var password: String
+    private lateinit var mess:Mess
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,6 +41,7 @@ class SignUpFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         email = binding.etEmail.text.toString().trim()
         password = binding.etPassword.text.toString().trim()
+        mess=Mess(requireContext())
     }
 
     fun animate() {
@@ -49,66 +52,51 @@ class SignUpFragment : Fragment() {
 
     fun listeners() {
         binding.verify.setOnClickListener {
-            // sendOtp(binding.etEmail.text.toString().trim())
             email = binding.etEmail.text.toString().trim()
             password = binding.etPassword.text.toString().trim()
-            registerUser(email, password)
+            if(email.isNotEmpty()&&password.isNotEmpty())
+            {
+                registerUser(email, password)
+            }
+            else
+            {
+                mess.toast("Feilds cannot be Empty!")
+            }
+
 
         }
         binding.tvSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_signUpFragment_to_loginInFragment)
+            findNavController().navigateUp()
         }
     }
 
-//    private fun sendOtp(email: String) {
-//        val data = hashMapOf("email" to email)
-//
-//        FirebaseFunctions.getInstance()
-//            .getHttpsCallable("sendOtp")
-//            .call(data)
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    // OTP sent successfully
-//                    Toast.makeText(requireContext(), "OTP sent to your email.", Toast.LENGTH_SHORT).show()
-//                    findNavController().navigate(R.id.action_signUpFragment_to_otpFragment)
-//                } else {
-//                    // Handle error
-//                    Toast.makeText(requireContext(), "Failed to send OTP.", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//    }
-
     private fun registerUser(email: String, password: String) {
+        mess.addPb("Registering...")
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
-                    // Registration successful, send verification email
+                    mess.pbDismiss()
                     sendVerificationEmail()
+
                 } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(
-                        requireContext(), task.exception?.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    mess.toast(task.exception?.message!!)
                 }
             }
     }
 
     private fun sendVerificationEmail() {
+        mess.addPb("Sending verification email...")
         val user = auth.currentUser
         user?.sendEmailVerification()
             ?.addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(
-                        requireContext(), "Verification email sent to ${user.email}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                   mess.pbDismiss()
+                    mess.toast("Verification email sent to ${user.email}")
                     findNavController().navigate(R.id.action_signUpFragment_to_loginInFragment)
                 } else {
-                    Toast.makeText(
-                        requireContext(), "Failed to send verification email.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    mess.pbDismiss()
+                  mess.toast("Failed to send verification email.")
+
                 }
             }
     }

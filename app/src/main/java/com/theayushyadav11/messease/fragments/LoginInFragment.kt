@@ -164,7 +164,7 @@ class LoginInFragment : Fragment() {
             .addOnCompleteListener() { task ->
                 mess.pbDismiss()
                 if (task.isSuccessful) {
-                    Log.d("Firebase", "signInWithCredential:success")
+
                     val user = auth.currentUser
                     Toast.makeText(
                         requireContext(),
@@ -176,7 +176,7 @@ class LoginInFragment : Fragment() {
                     navigate()
 
                 } else {
-                    Log.w("Firebase", "signInWithCredential:failure", task.exception)
+
                     Toast.makeText(requireContext(), "Authentication Failed.", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -186,7 +186,7 @@ class LoginInFragment : Fragment() {
 
     private fun display(s: Any) {
         Snackbar.make(binding.textInputLayout, s.toString(), Snackbar.LENGTH_LONG).show()
-        //Toast.makeText(this, s.toString(), Toast.LENGTH_SHORT).show()
+
     }
 
     private fun forgotPassword() {
@@ -262,6 +262,7 @@ class LoginInFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "Any feilds cannot be empty", Toast.LENGTH_SHORT)
                 .show()
+            mess.pbDismiss()
         }
     }
 

@@ -103,7 +103,7 @@ class McMAin : Fragment() {
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-                        Log.d("Error", error.message)
+
                     }
                 })
 

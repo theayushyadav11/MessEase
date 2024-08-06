@@ -49,7 +49,7 @@ class UploadMenuFragment : Fragment() {
         initialize()
         listener()
         check()
-        toast()
+
 
     }
 
@@ -89,12 +89,16 @@ class UploadMenuFragment : Fragment() {
                 builder.setCancelable(false)
                 builder.setMessage("Are you sure you want to delete? \n This cannot be undone!.")
                 builder.setPositiveButton("Ok") { dialog, which ->
-                    viewModel.deleteApprove(menuDetail.id)
-                    FireBase().deleteFileFromUrl(menuDetail.url, onSuccess = {
-                        mess.toast("Deleted successfully")
+                    viewModel.deleteApprove(menuDetail.id, onSuccess = {
+                        FireBase().deleteFileFromUrl(menuDetail.url, onSuccess = {
+                            mess.toast("Deleted successfully")
+                        }, onFailure = {
+                            mess.toast("Failed to delete menu")
+                        })
                     }, onFailure = {
                         mess.toast("Failed to delete menu")
                     })
+
 
 
                     dialog.dismiss()
@@ -117,29 +121,40 @@ class UploadMenuFragment : Fragment() {
                 builder.setMessage("Are you sure you want upload a new Menu?")
                 builder.setPositiveButton("Yes") { dialog, which ->
                     mess.addPb("Uploading Menu...")
-                    FireBase().deleteFileFromUrl(menuDetail.url, onSuccess = {
-                        viewModel.uploadMainMenu(menuDetail.menu!!,
-                        onSuccess={
-                            viewModel.deleteApprove(menuDetail.id)
-                            mess.pbDismiss()
-                            viewModel.t.value = "Menu uploaded successfully"
-                            GlobalScope.launch(Dispatchers.IO)
-                            {
-                                val database=MenuDatabase.getDatabase(requireContext()).menuDao()
-                                database.addMenu(Menu(id="1",menu=menuDetail.menu.menu))
-                            }
-                        }, onFailure = {
-                                mess.toast(it)
+                    try {
+                        viewModel.getMainMenuUrl(onSuccess = { mainMenuUrl->
+                            FireBase().deleteFileFromUrl(mainMenuUrl,onSuccess = {
+                                viewModel.uploadMainMenu(menuDetail.menu!!,
+                                    onSuccess= {
+                                               viewModel.uploadMainMenuUrl(menuDetail.url,onSuccess={
+                                                   viewModel.deleteApprove(menuDetail.id, onSuccess = {
+                                                       mess.toast("Menu Uploaded successfully 1")
+                                                       mess.pbDismiss()
+                                                       return@deleteApprove
+                                                   }, onFailure = {
+                                                       mess.toast(it)
+                                                       mess.pbDismiss()
+                                                   })
+                                               },onFailure={
+                                                   mess.toast(it)
+                                                   mess.pbDismiss()
+                                         })
+                                    }, onFailure = {
+                                        mess.toast(it)
+                                        mess.pbDismiss()
+                                    })
+                            }, onFailure = {
+                                mess.toast(it.message!!)
                                 mess.pbDismiss()
-                        } )
+                            })
+                        },onFailure = {
 
-                    }, onFailure = {
-                        mess.toast(it.message.toString())
-                        mess.pbDismiss()
-                    })
-
-
-
+                            mess.toast(it)
+                            mess.pbDismiss()
+                        })
+                    } catch (e: Exception) {
+                        mess.toast(e.message.toString())
+                    }
 
 
 
@@ -169,10 +184,6 @@ class UploadMenuFragment : Fragment() {
         }
     }
 
-    fun toast() {
-        viewModel.t.observe(viewLifecycleOwner) {
-            mess.toast(it)
-        }
-    }
+
 
 }

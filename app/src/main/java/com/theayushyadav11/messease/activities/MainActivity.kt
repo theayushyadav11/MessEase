@@ -1,6 +1,7 @@
 package com.theayushyadav11.messease.activities
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -22,9 +23,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.ActivityMainBinding
 import com.theayushyadav11.messease.utils.Mess
+import com.theayushyadav11.messease.viewModels.Menu2
+import com.theayushyadav11.myapplication.database.MenuDatabase
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,9 +47,37 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
+        savedatabase()
 
     }
+    fun savedatabase() {
+        val db = MenuDatabase.getDatabase(this)
+        val menuDao = db.menuDao()
+        FirebaseDatabase.getInstance().reference.child("MainMenu")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val m = snapshot.getValue(Menu2::class.java)
+                    val menu = m?.let { Menu2(id = "1", menu = it.menu) }
+                    GlobalScope.launch {
+                        if (menu != null) {
+                            menuDao.addMenu(
+                                com.theayushyadav11.myapplication.models.Menu(
+                                    id = menu.id,
+                                    menu = menu.menu
+                                )
+                            )
+                        }
+                    }
+                }
 
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+
+
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
@@ -136,7 +173,23 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_download->{
-                    Mess(this).toast("Abhi ye feature add nhi hua hai")
+
+                    FirebaseDatabase.getInstance().reference.child("ayush").addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val pdfUrl = snapshot.value.toString()
+                            val uri = (Uri.parse(pdfUrl))
+                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                           Mess(this@MainActivity).toast(error.message)
+                        }
+
+                    })
+
+
                     true
                 }
                 else -> {

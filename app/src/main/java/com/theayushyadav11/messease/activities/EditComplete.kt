@@ -78,7 +78,7 @@ class EditComplete : AppCompatActivity() {
         try {
             startActivity(intent)
         } catch (e: Exception) {
-            Log.d("PDF", e.toString())
+
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
         }
 
@@ -93,9 +93,6 @@ class EditComplete : AppCompatActivity() {
                 val roomDatabase = MenuDatabase.getDatabase(this).menuDao()
                 lifecycleScope.launch(Dispatchers.IO) {
                     editedMenu = roomDatabase.getEditedMenu()
-
-                    mess.log(editedMenu)
-
                     val aprMenu =
                         AprMenu(
                             key,
@@ -165,7 +162,7 @@ class EditComplete : AppCompatActivity() {
                             var name = ""
                             var year = ""
                             for (i in snapshot.children) {
-                                Log.d("pranilash", i.toString())
+
                                 if (i.key == "name")
                                     name = i.value.toString()
                                 if (i.key == "passYear")

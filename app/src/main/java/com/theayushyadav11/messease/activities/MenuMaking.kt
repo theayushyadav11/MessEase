@@ -140,7 +140,7 @@ class MenuMaking : AppCompatActivity() {
 
         val fileName = "Mess Menu.pdf"
         val filePath = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
-        Log.d("PDF", "File path: ${filePath.absolutePath}")
+
 
         try {
             if (filePath.exists()) {
@@ -155,7 +155,6 @@ class MenuMaking : AppCompatActivity() {
             fos.close()
             Toast.makeText(this, "PDF Conversion Successful", Toast.LENGTH_LONG).show()
         } catch (e: IOException) {
-            Log.d("PDF", "Error while writing: $e")
             e.printStackTrace()
         }
     }
@@ -175,7 +174,6 @@ class MenuMaking : AppCompatActivity() {
             try {
                 startActivity(intent)
             } catch (e: Exception) {
-                Log.d("PDF", e.toString())
                 Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
             }
         } else {
@@ -286,7 +284,7 @@ class MenuMaking : AppCompatActivity() {
                 try {
                     texts[i][j].text = dd[j][i].food
                 } catch (e: Exception) {
-                    mess.log("error")
+
                 }
             }
         }
@@ -320,13 +318,13 @@ class MenuMaking : AppCompatActivity() {
                         )
                     )
 
-                    mess.log(dd[i][j].foodType + "    " + texts[j][i].text.toString() + " " + dd[i][j].timing + "  \n")
+
                 } catch (e: Exception) {
-                    mess.log("error")
+
                 }
             }
             dayMenu.add(list)
-            mess.log("space")
+
         }
         editedMenu = Menu(
             "edited",

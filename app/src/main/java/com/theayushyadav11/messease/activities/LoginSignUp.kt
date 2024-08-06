@@ -23,10 +23,6 @@ class LoginSignUp : AppCompatActivity() {
         }
 
     }
-//    override fun onSupportNavigateUp(): Boolean {
-//        val navController = findNavController(R.id.loginsignuphost)
-//        return navController.navigateUp() || super.onSupportNavigateUp()
-//    }
 
     override fun onBackPressed() {
         super.onBackPressed()

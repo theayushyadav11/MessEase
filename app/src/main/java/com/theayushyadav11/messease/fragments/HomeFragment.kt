@@ -79,9 +79,11 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         listeners()
         onData()
         database()
-        savedatabase()
+        test()
     }
+   fun test() {
 
+   }
     private fun init() {
         try {
             auth = FirebaseAuth.getInstance()
@@ -348,9 +350,6 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
 
 
             }
-//            val list= dayOfWeek.value?.let { getMenu(menu, it) }
-//            Log.d("yadavjikabeta ",list.toString())
-
 
         }
 
@@ -361,33 +360,11 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         val menuDao = db.menuDao()
         GlobalScope.launch {
             val retrievedMenu = menuDao.getMenu()
-            Log.d("Menu", retrievedMenu.toString())
+
         }
 
     }
-    fun savedatabase() {
-        val db = MenuDatabase.getDatabase(requireContext())
-        val menuDao = db.menuDao()
-        FirebaseDatabase.getInstance().reference.child("MainMenu")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val m = snapshot.getValue(Menu2::class.java)
-                    val menu = m?.let { Menu2(id = "1", menu = it.menu) }
-                    GlobalScope.launch {
-                        if (menu != null) {
-                            menuDao.addMenu(Menu(id = menu.id, menu = menu.menu))
-                        }
-                    }
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
-
-
-    }
     fun getMenu(menu: Menu, day: Int): MutableList<Particulars> {
         return when (day) {
             Calendar.MONDAY -> menu.menu.list[0].toMutableList()
@@ -436,7 +413,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         time.text=msg.time
         date.text=msg.date
         creator.text=msg.creater
-       Log.d("maneesh",msg.photos.toString())
+
         for( url in msg.photos)
         {
             //(url)
@@ -455,7 +432,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         binding.msgsAdder.addView(layout)
     }
     private fun showDialog(url:String) {
-        // Inflate the custom layout
+
         val inflater = LayoutInflater.from(requireContext())
         val dialogView = inflater.inflate(R.layout.img, null)
 
