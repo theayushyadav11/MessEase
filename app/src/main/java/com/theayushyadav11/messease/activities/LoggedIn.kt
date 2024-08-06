@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.ActivityLoggedInBinding
+import com.theayushyadav11.messease.utils.FireBase
 import com.theayushyadav11.messease.utils.Mess
 
 class LoggedIn : AppCompatActivity() {
@@ -18,6 +19,7 @@ class LoggedIn : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
+    private lateinit var mess:Mess
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoggedInBinding.inflate(layoutInflater)
@@ -32,6 +34,7 @@ class LoggedIn : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
         binding.root.isVisible = false
+        mess=Mess(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -41,22 +44,41 @@ class LoggedIn : AppCompatActivity() {
 
     private fun isMember() {
 
-        if (!Mess(this).isMember()) {
+      FireBase().isMember(auth.currentUser?.uid.toString(), onSuccess = {
+            if (!it)
+            {
+                mess.toast(it.toString())
 
+                binding.root.isVisible = false
+          val builder = AlertDialog.Builder(this)
+          builder.setTitle("Alert!")
+          builder.setCancelable(false)
+          builder.setMessage("You are not a member of Mess Committee!")
+          builder.setPositiveButton("Ok") { dialog, _ ->
+              val intent = Intent(this, MainActivity::class.java)
+              intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+              startActivity(intent)
+              dialog.dismiss()
+          }
+
+          builder.show()
+      } else {
+          binding.root.isVisible = true
+      }
+        }, onFailure = {
             binding.root.isVisible = false
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Alert!")
             builder.setCancelable(false)
-            builder.setMessage("You are not a member of Mess Committee?")
-            builder.setPositiveButton("Ok") { dialog, which ->
-                startActivity(Intent(this, MainActivity::class.java))
+            builder.setMessage("Failed to get details!")
+            builder.setPositiveButton("Ok") { dialog, _ ->
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
                 dialog.dismiss()
             }
-
             builder.show()
-        } else {
-            binding.root.isVisible = true
-        }
+        })
 
     }
 

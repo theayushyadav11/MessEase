@@ -35,9 +35,8 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_splash_screen)
+        checkFirst()
 
-
-        database()
 
         imageView = findViewById(R.id.imageViewLogo)
         auth = FirebaseAuth.getInstance()
@@ -46,7 +45,7 @@ class SplashScreen : AppCompatActivity() {
         imageView.startAnimation(fadeAnimation)
         Handler().postDelayed(Runnable {
 
-            checkFirst()
+
             if (FirebaseAuth.getInstance().currentUser?.isEmailVerified == true) {
                 navigate()
             } else {
@@ -62,29 +61,7 @@ class SplashScreen : AppCompatActivity() {
 
     }
 
-    fun database() {
-        val db = MenuDatabase.getDatabase(this)
-        val menuDao = db.menuDao()
-        FirebaseDatabase.getInstance().reference.child("MainMenu")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val m = snapshot.getValue(Menu2::class.java)
-                    val menu = m?.let { Menu2(id = "1", menu = it.menu) }
-                    GlobalScope.launch {
-                        if (menu != null) {
-                            menuDao.addMenu(Menu(id = menu.id, menu = menu.menu))
-                        }
-                    }
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    navigate()
-                }
-
-            })
-
-
-    }
 
 
     object AppPreferences {
@@ -109,10 +86,29 @@ class SplashScreen : AppCompatActivity() {
 
     fun checkFirst() {
         if (AppPreferences.isFirstTimeLaunch(this)) {
-            // Perform the necessary actions for the first time launch
-            //Toast.makeText(this, "Welcome to the app!", Toast.LENGTH_LONG).show()
 
-            // Set the flag to false as the app is no longer opening for the first time
+                val db = MenuDatabase.getDatabase(this)
+                val menuDao = db.menuDao()
+                FirebaseDatabase.getInstance().reference.child("MainMenu")
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val m = snapshot.getValue(Menu2::class.java)
+                            val menu = m?.let { Menu2(id = "1", menu = it.menu) }
+                            GlobalScope.launch {
+                                if (menu != null) {
+                                    menuDao.addMenu(Menu(id = menu.id, menu = menu.menu))
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+
+                    })
+
+
+
             AppPreferences.setFirstTimeLaunch(this, false)
         } else {
             // Perform actions for subsequent launches

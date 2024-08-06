@@ -124,9 +124,9 @@ class AdminFragment : Fragment() {
     }
 
     fun addOnDatabase(email: String, password: String, name: String) {
-        databse.child("Users").child(auth.currentUser?.uid.toString())
+        databse.child("UsersMc").child(auth.currentUser?.uid.toString())
             .setValue(User(name, email, password, designation))
-        databse.child("allow").push().setValue(email)
+        databse.child("allow").child(auth.currentUser?.uid.toString()).setValue(email)
 
     }
 
@@ -145,40 +145,43 @@ class AdminFragment : Fragment() {
 
 
     private fun registerUser(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener() { task ->
-                if (task.isSuccessful) {
-                    sendVerificationEmail()
-                    display("User created successfully")
-                    addOnDatabase(email, password, binding.etName.text.toString().trim())
-                    signOut()
-                    auth.signInWithEmailAndPassword("lit2023049@iiitl.ac.in","ayush1234").
-                        addOnCompleteListener{
-                            if(it.isSuccessful)
-                            {
-                                mess.pbDismiss()
-                                display("Added Successfully")
+        try {
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener() { task ->
+                    if (task.isSuccessful) {
+                        display("User created successfully")
+                        addOnDatabase(email, password, binding.etName.text.toString().trim())
+                        signOut()
+                        auth.signInWithEmailAndPassword("lit2023049@iiitl.ac.in","ayush1234").
+                            addOnCompleteListener{
+                                if(it.isSuccessful)
+                                {
+                                    mess.pbDismiss()
+                                    display("Added Successfully")
+                                }
+                                else
+                                {
+                                    mess.pbDismiss()
+                                    display("Failed to sign in")
+                                }
                             }
-                            else
-                            {
-                                mess.pbDismiss()
-                                display("Failed to sign in")
-                            }
-                        }
-                    binding.etEmail.setText("")
-                    binding.etPassword.setText("")
-                    binding.etName.setText("")
+                        binding.etEmail.setText("")
+                        binding.etPassword.setText("")
+                        binding.etName.setText("")
 
 
-                } else {
+                    } else {
 
-                    Toast.makeText(
-                        requireContext(), task.exception?.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        Toast.makeText(
+                            requireContext(), task.exception?.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    mess.pbDismiss()
                 }
-                mess.pbDismiss()
-            }
+        } catch (e: Exception) {
+
+        }
     }
 
     private fun sendVerificationEmail() {

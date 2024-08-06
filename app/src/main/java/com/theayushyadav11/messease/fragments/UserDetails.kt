@@ -15,6 +15,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.activities.MainActivity
 import com.theayushyadav11.messease.databinding.FragmentUserDetailsBinding
+import com.theayushyadav11.messease.utils.FireBase
+
 import com.theayushyadav11.messease.utils.Mess
 import java.util.Date
 
@@ -61,13 +63,8 @@ class UserDetails : Fragment() {
             if (name.isNotEmpty()) {
                 mess.addPb("Adding Details...")
                 database.child("Users").child(auth.currentUser?.uid.toString()).child("details")
-                    .child("name").setValue(name)
-                database.child("Users").child(auth.currentUser?.uid.toString()).child("details")
-                    .child("passYear").setValue(passingYear)
-                database.child("Users").child(auth.currentUser?.uid.toString()).child("details")
-                    .child("batch").setValue(batch)
-                database.child("Users").child(auth.currentUser?.uid.toString()).child("details")
-                    .child("gender").setValue(gender).addOnCompleteListener {
+                    .setValue(FireBase.Detail(name, batch, gender, passingYear))
+               .addOnCompleteListener {
                     if (it.isSuccessful) {
                         mess.toast("Added successfully")
                         mess.pbDismiss()

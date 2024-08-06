@@ -37,6 +37,7 @@ import com.theayushyadav11.messease.models.Poll
 import com.theayushyadav11.messease.utils.FireBase
 import com.theayushyadav11.messease.utils.Mess
 import com.theayushyadav11.messease.viewModels.HomeViewModel
+import com.theayushyadav11.messease.viewModels.Menu2
 import com.theayushyadav11.myapplication.database.MenuDatabase
 import com.theayushyadav11.myapplication.models.Menu
 import com.theayushyadav11.myapplication.models.Particulars
@@ -78,28 +79,33 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         listeners()
         onData()
         database()
+        savedatabase()
     }
 
     private fun init() {
-        auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance().reference
-        dayOfWeek.value = homeViewModel.dayOfWeek.value
-        val rv = binding.rv
-        val adapter = DateAdapter(this)
-        rv.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        rv.adapter = adapter
-        homeViewModel.currentDate.observe(viewLifecycleOwner) {
-            pos = it
-            binding.rv.smoothScrollToPosition(pos + 2)
+        try {
+            auth = FirebaseAuth.getInstance()
+            database = FirebaseDatabase.getInstance().reference
+            dayOfWeek.value = homeViewModel.dayOfWeek.value
+            val rv = binding.rv
+            val adapter = DateAdapter(this)
+            rv.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            rv.adapter = adapter
+            homeViewModel.currentDate.observe(viewLifecycleOwner) {
+                pos = it
+                binding.rv.smoothScrollToPosition(pos + 2)
+
+            }
+
+
+            homeViewModel.currentMonthYear.observe(viewLifecycleOwner) {
+                binding.month.text = it
+            }
+            mess = Mess(requireContext())
+        } catch (e: Exception) {
 
         }
-
-
-        homeViewModel.currentMonthYear.observe(viewLifecycleOwner) {
-            binding.month.text = it
-        }
-        mess = Mess(requireContext())
 
 
     }
@@ -161,110 +167,116 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
 
     fun addFood(list: MutableList<Particulars>) {
         for (i in 0..3) {
-            val layout = LayoutInflater.from(requireContext())
-                .inflate(R.layout.daily_menu, binding.adder, false)
-            val view = DailyMenuBinding.inflate(layoutInflater)
-            val foodType = layout.findViewById<TextView>(R.id.foodType)
-            val foodMenu = layout.findViewById<TextView>(R.id.foodMenu)
-            val foodTimeing = layout.findViewById<TextView>(R.id.foodTimeing)
-            foodType.text = list[i].foodType
-            foodMenu.text = list[i].food
+            try {
+                val layout = LayoutInflater.from(requireContext())
+                    .inflate(R.layout.daily_menu, binding.adder, false)
+                val view = DailyMenuBinding.inflate(layoutInflater)
+                val foodType = layout.findViewById<TextView>(R.id.foodType)
+                val foodMenu = layout.findViewById<TextView>(R.id.foodMenu)
+                val foodTimeing = layout.findViewById<TextView>(R.id.foodTimeing)
+                foodType.text = list[i].foodType
+                foodMenu.text = list[i].food
+                foodTimeing.text = list[i].timing
+                binding.adder.addView(layout)
+            } catch (e: Exception) {
 
-            foodTimeing.text = list[i].timing
-
-            binding.adder.addView(layout)
+            }
         }
     }
 
     private fun addPoll(poll: Poll) {
         if (!isAdded) return
         val context = context ?: return //
-        val itemView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.poll_layout, binding.adder, false)
-        val question: TextView = itemView.findViewById(R.id.tvQuestion)
-        val name: TextView = itemView.findViewById(R.id.tvname)
-        val linearLayout: LinearLayout = itemView.findViewById(R.id.radioGroup)
-        itemView.findViewById<ImageView>(R.id.delete).isVisible = false
-        itemView.findViewById<LinearLayout>(R.id.vv).isVisible = false
-        itemView.findViewById<TextView>(R.id.time).text = poll.time
+        try {
+            val itemView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.poll_layout, binding.adder, false)
+            val question: TextView = itemView.findViewById(R.id.tvQuestion)
+            val name: TextView = itemView.findViewById(R.id.tvname)
+            val linearLayout: LinearLayout = itemView.findViewById(R.id.radioGroup)
+            itemView.findViewById<ImageView>(R.id.delete).isVisible = false
+            itemView.findViewById<LinearLayout>(R.id.vv).isVisible = false
+            itemView.findViewById<TextView>(R.id.time).text = poll.time
 
-        question.text = poll.question
-        name.text = poll.createrName
-        binding.adder.addView(itemView)
-        linearLayout.removeAllViews()
-
-
-        var listOfRb: MutableList<RadioButton> = mutableListOf()
-        val opt = poll.options.toList()
-        for (i in 0 until opt.size) {
-            val option = opt[i]
-            val view = LayoutInflater.from(linearLayout.context)
-                .inflate(R.layout.poll_layout_element, linearLayout, false)
-            val optTitle = view.findViewById<TextView>(R.id.title)
-            val optRb = view.findViewById<RadioButton>(R.id.rb)
-            listOfRb.add(optRb)
-            val optNop = view.findViewById<TextView>(R.id.nop)
-            val pl: ConstraintLayout = view.findViewById(R.id.pl)
+            question.text = poll.question
+            name.text = poll.createrName
+            binding.adder.addView(itemView)
+            linearLayout.removeAllViews()
 
 
-            var count = 0
-            database.child("pollResult").child(poll.uid)
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        count = 0
-                        var tv = 0
-                        for (child in snapshot.children) {
-                            tv++
-                            val optionSelected=child.getValue(OptionSelected::class.java)
-                            if (optionSelected?.selected == option)
-                                count++
-                        }
-                        val optPb = view.findViewById<ProgressBar>(R.id.ProgressBar)
-                        var progress = 0
-                        if (tv > 0) {
-                            progress = ((count) * 100) / tv
-                        }
-                        optTitle.text = option
-                        optNop.text = (count).toString()
-                        optPb.progress = progress
-                    }
+            var listOfRb: MutableList<RadioButton> = mutableListOf()
+            val opt = poll.options.toList()
+            for (i in 0 until opt.size) {
+                val option = opt[i]
+                val view = LayoutInflater.from(linearLayout.context)
+                    .inflate(R.layout.poll_layout_element, linearLayout, false)
+                val optTitle = view.findViewById<TextView>(R.id.title)
+                val optRb = view.findViewById<RadioButton>(R.id.rb)
+                listOfRb.add(optRb)
+                val optNop = view.findViewById<TextView>(R.id.nop)
+                val pl: ConstraintLayout = view.findViewById(R.id.pl)
 
-                    override fun onCancelled(error: DatabaseError) {
 
-                    }
-
-                })
-            database.child("pollResult").child(poll.uid).child(auth.currentUser?.uid.toString())
-                .addValueEventListener(
-                    object : ValueEventListener {
+                var count = 0
+                database.child("pollResult").child(poll.uid)
+                    .addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            val optionSelected=snapshot.getValue(OptionSelected::class.java)
-                            if (optionSelected?.selected?.trim() == optTitle.text.trim()) {
-                                optRb.isChecked = true
-
-                            } else
-                                optRb.isChecked = false
+                            count = 0
+                            var tv = 0
+                            for (child in snapshot.children) {
+                                tv++
+                                val optionSelected=child.getValue(OptionSelected::class.java)
+                                if (optionSelected?.selected == option)
+                                    count++
+                            }
+                            val optPb = view.findViewById<ProgressBar>(R.id.ProgressBar)
+                            var progress = 0
+                            if (tv > 0) {
+                                progress = ((count) * 100) / tv
+                            }
+                            optTitle.text = option
+                            optNop.text = (count).toString()
+                            optPb.progress = progress
                         }
 
                         override fun onCancelled(error: DatabaseError) {
 
                         }
 
-                    }
-                )
+                    })
+                database.child("pollResult").child(poll.uid).child(auth.currentUser?.uid.toString())
+                    .addValueEventListener(
+                        object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val optionSelected=snapshot.getValue(OptionSelected::class.java)
+                                if (optionSelected?.selected?.trim() == optTitle.text.trim()) {
+                                    optRb.isChecked = true
+
+                                } else
+                                    optRb.isChecked = false
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+
+                            }
+
+                        }
+                    )
 
 
 
-            pl.setOnClickListener {
-                clickedOpt(listOfRb, poll.options, i, poll.uid)
+                pl.setOnClickListener {
+                    clickedOpt(listOfRb, poll.options, i, poll.uid)
+
+                }
+                optRb.setOnClickListener {
+                    clickedOpt(listOfRb, poll.options, i, poll.uid)
+
+                }
+
+                linearLayout.addView(view)
 
             }
-            optRb.setOnClickListener {
-                clickedOpt(listOfRb, poll.options, i, poll.uid)
-
-            }
-
-            linearLayout.addView(view)
+        } catch (e: Exception) {
 
         }
 
@@ -324,14 +336,14 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         val dao = db.menuDao()
         GlobalScope.launch(Dispatchers.IO) {
             val menu = dao.getMenu()
-            Log.d("yadavjikabeta ", menu.toString())
+
             withContext(Dispatchers.Main) {
                 dayOfWeek.observe(viewLifecycleOwner) { value ->
                     list = value?.let { getMenu(menu, it) }!!
                     if (list != null) {
                         addELements("$day${getCurrentDate()}")
                     }
-                    Log.d("yadavjikabeta ", list.toString())
+
                 }
 
 
@@ -353,7 +365,29 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         }
 
     }
+    fun savedatabase() {
+        val db = MenuDatabase.getDatabase(requireContext())
+        val menuDao = db.menuDao()
+        FirebaseDatabase.getInstance().reference.child("MainMenu")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val m = snapshot.getValue(Menu2::class.java)
+                    val menu = m?.let { Menu2(id = "1", menu = it.menu) }
+                    GlobalScope.launch {
+                        if (menu != null) {
+                            menuDao.addMenu(Menu(id = menu.id, menu = menu.menu))
+                        }
+                    }
+                }
 
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+
+
+    }
     fun getMenu(menu: Menu, day: Int): MutableList<Particulars> {
         return when (day) {
             Calendar.MONDAY -> menu.menu.list[0].toMutableList()
@@ -370,9 +404,15 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
     }
 
     fun optionSelect(uid: String, option: String) {
-        val selectedOption = OptionSelected(selected=option,time=mess.getCurrentTimeInAmPm(),date=mess.getCurrentDate(),)
-        database.child("pollResult").child(uid).child(auth.currentUser?.uid.toString())
-            .setValue(selectedOption)
+
+        FireBase().getDetailByUid(auth.currentUser?.uid.toString(), onSuccess =  { name, batch,passYear,_ ->
+            val selectedOption = OptionSelected(selected=option,time=mess.getCurrentTimeInAmPm(),email=auth.currentUser?.email.toString(),name=name,date=mess.getCurrentDate(),)
+            database.child("pollResult").child(uid).child(auth.currentUser?.uid.toString())
+                .setValue(selectedOption)
+
+        }, onFailure = {
+
+        })
 
 
 
@@ -384,7 +424,7 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         return dateFormat.format(calendar.time)
     }
     fun addMsg(msg: Msg) {
-       val layout=LayoutInflater.from(requireContext()).inflate(R.layout.msg_layout,binding.adder,false)
+       val layout=LayoutInflater.from(binding.adder.context).inflate(R.layout.msg_layout,binding.adder,false)
         val title=layout.findViewById<TextView>(R.id.title)
         val body=layout.findViewById<TextView>(R.id.body)
         val time=layout.findViewById<TextView>(R.id.time)

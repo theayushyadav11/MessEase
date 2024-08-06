@@ -144,12 +144,12 @@ class FireBase {
     }
 
     fun uploadImages(
-        id:String,
+        id: String,
         images: List<Uri>,
         onSuccess: (List<String>) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
-        if(images.isEmpty())
+        if (images.isEmpty())
             onSuccess(emptyList())
         val storage = FirebaseStorage.getInstance()
         val storageRef = storage.reference
@@ -180,19 +180,83 @@ class FireBase {
             onFailure(it)
         }
     }
-    fun getDetails(uid: String,onSuccess:(name: String,designation: String)->Unit)
-    {
-        database.child("Users").child(uid).addValueEventListener(object : ValueEventListener {
+
+    fun getDetails(uid: String, onSuccess: (name: String, designation: String) -> Unit) {
+        database.child("UsersMc").child(uid).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val name = snapshot.child("name").value.toString()
                 val designation = snapshot.child("designation").value.toString()
-                onSuccess(name,designation)
+                onSuccess(name, designation)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                onSuccess("","")
+                onSuccess("", "")
             }
 
         })
     }
+
+    fun getDetailByUid(
+        uid: String,
+        onSuccess: (String, String, String, String) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        database.child("Users").child(uid).child("details")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val detail = snapshot.getValue(Detail::class.java)
+                    if (detail != null) {
+                        onSuccess(detail.name, detail.batch, detail.passYear, detail.gender)
+                    }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    onFailure(error.message)
+                }
+
+            })
+    }
+    fun isMember(uid: String, onSuccess: (Boolean) -> Unit, onFailure: (String) -> Unit) {
+        database.child("allow").child(uid).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+               if(snapshot.value!=null)
+                   onSuccess(true)
+                 else
+                onSuccess(false)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                onFailure(error.message)
+            }
+        })
+    }
+    fun getMcMemberDetail(
+        uid: String,
+        onSuccess: (String, String) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        database.child("Users").child(uid).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val name = snapshot.child("name").value.toString()
+                val designation = snapshot.child("designation").value.toString()
+                onSuccess(name, designation)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                onFailure(error.message)
+            }
+        })
+
+
+    }
+
+    data class Detail(
+        val name: String = "",
+        val batch: String = "",
+        val gender: String = "",
+        val passYear: String = ""
+    )
 }

@@ -92,7 +92,7 @@ class CreatePoll : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s?.length!! < 2) {
                     scrollTo += 50
-                    val adding = LayoutInflater.from(requireContext())
+                    val adding = LayoutInflater.from(binding.adder.context)
                         .inflate(R.layout.poll_elements, binding.adder, false)
                     val et: EditText = adding.findViewById<EditText>(R.id.opt)
                     optionList.add(et)
