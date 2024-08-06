@@ -428,11 +428,13 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
         val title=layout.findViewById<TextView>(R.id.title)
         val body=layout.findViewById<TextView>(R.id.body)
         val time=layout.findViewById<TextView>(R.id.time)
+        val date=layout.findViewById<TextView>(R.id.date)
         val creator=layout.findViewById<TextView>(R.id.creater)
         val adder=layout.findViewById<LinearLayout>(R.id.adder)
         title.text=msg.title
         body.text=msg.body
         time.text=msg.time
+        date.text=msg.date
         creator.text=msg.creater
        Log.d("maneesh",msg.photos.toString())
         for( url in msg.photos)

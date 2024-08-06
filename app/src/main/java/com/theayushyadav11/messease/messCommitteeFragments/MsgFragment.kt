@@ -40,7 +40,7 @@ class MsgFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-mess=Mess(requireContext())
+        mess=Mess(requireContext())
 
         database.child("Messages").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -49,7 +49,6 @@ mess=Mess(requireContext())
                 for (data in snapshot.children) {
                     val message = data.getValue(Msg::class.java)
                     if (message != null&&message.creater==auth.currentUser?.displayName){
-                        addMsg(message)
                         list.add(message)
                     }
 
@@ -57,10 +56,17 @@ mess=Mess(requireContext())
                 if(list.isEmpty())
                 {
                     binding.msg.visibility=View.VISIBLE
+                    binding.msgAdder.removeAllViews()
                 }
                 else
                 {
                     binding.msg.visibility=View.GONE
+                    list.sortByDescending { it.comp }
+                    binding.msgAdder.removeAllViews()
+                    for (msg in list)
+                    {
+                        addMsg(msg)
+                    }
                 }
 
 
@@ -74,81 +80,92 @@ mess=Mess(requireContext())
     }
 
     fun addMsg(msg: Msg) {
-        val layout=LayoutInflater.from(requireContext()).inflate(R.layout.msg_layout,binding.msgAdder,false)
-        val title=layout.findViewById<TextView>(R.id.title)
-        val body=layout.findViewById<TextView>(R.id.body)
-        val time=layout.findViewById<TextView>(R.id.time)
-        val creator=layout.findViewById<TextView>(R.id.creater)
-        val adder=layout.findViewById<LinearLayout>(R.id.adder)
-        val delete=layout.findViewById<ImageView>(R.id.delete)
-        delete.visibility=View.VISIBLE
-        title.text=msg.title
-        body.text=msg.body
-        time.text=msg.time
-        creator.text=msg.creater
-        Log.d("maneesh",msg.photos.toString())
-        for( url in msg.photos)
-        {
+        try {
+            val layout=LayoutInflater.from(requireContext()).inflate(R.layout.msg_layout,binding.msgAdder,false)
+            val title=layout.findViewById<TextView>(R.id.title)
+            val body=layout.findViewById<TextView>(R.id.body)
+            val time=layout.findViewById<TextView>(R.id.time)
+            val date=layout.findViewById<TextView>(R.id.date)
+            val creator=layout.findViewById<TextView>(R.id.creater)
+            val adder=layout.findViewById<LinearLayout>(R.id.adder)
+            val delete=layout.findViewById<ImageView>(R.id.delete)
+            delete.visibility=View.VISIBLE
+            title.text=msg.title
+            body.text=msg.body
+            time.text=msg.time
+            date.text=msg.date
+            creator.text=msg.creater
+            for( url in msg.photos)
+            {
 
-            val img=LayoutInflater.from(requireContext()).inflate(R.layout.img,adder,false)
-            Picasso.get()
-                .load(url)
-                .into(img.findViewById<ImageView>(R.id.img))
+                try {
+                    val img=LayoutInflater.from(requireContext()).inflate(R.layout.img,adder,false)
+                    Picasso.get()
+                        .load(url)
+                        .into(img.findViewById<ImageView>(R.id.img))
 
-            adder.addView(img)
+                    adder.addView(img)
+                } catch (e: Exception) {
+
+                }
+            }
+            delete.setOnClickListener{
+
+                try {
+                    val dialog= AlertDialog.Builder(requireContext())
+                    dialog.setTitle("Alert")
+                    dialog.setMessage("Are you sure you want to delete this message?")
+                    dialog.setPositiveButton("Yes"){dialog,_->
+                        mess.addPb("Deleting message...")
+                        database.child("Messages").child(msg.uid).removeValue().addOnCompleteListener {
+                            if(it.isSuccessful)
+                            {
+
+                                for(i in msg.photos)
+                                {
+                                    val ref=FirebaseStorage.getInstance().getReferenceFromUrl(i)
+                                    ref.delete().addOnCompleteListener {
+                                        if(it.isSuccessful)
+                                        {
+                                            if(i==msg.photos.last())
+                                            {
+                                                mess.toast("Message deleted")
+                                                binding.msgAdder.removeView(layout)
+                                                mess.pbDismiss()
+                                            }
+                                        }else
+                                        {
+                                            mess.toast(it.exception?.message.toString())
+                                            mess.pbDismiss()
+                                        }
+                                    }
+                                }
+                                if(msg.photos.size==0)
+                                mess.pbDismiss()
+
+                            }
+                            else
+                            {
+                                mess.toast(it.exception?.message.toString())
+                                mess.pbDismiss()
+                            }
+                        }
+
+                        dialog.dismiss()
+                    }
+                    dialog.setNegativeButton("No"){dialog,_->
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+                } catch (e: Exception) {
+
+                }
+
+
+            }
+            binding.msgAdder.addView(layout)
+        } catch (e: Exception) {
+
         }
-         delete.setOnClickListener{
-
-             val dialog= AlertDialog.Builder(requireContext())
-             dialog.setTitle("Alert")
-             dialog.setMessage("Are you sure you want to delete this message?")
-             dialog.setPositiveButton("Yes"){dialog,_->
-                 mess.addPb("Deleting message...")
-                 database.child("Messages").child(msg.uid).removeValue().addOnCompleteListener {
-                     if(it.isSuccessful)
-                     {
-
-                         for(i in msg.photos)
-                         {
-                             val ref=FirebaseStorage.getInstance().getReferenceFromUrl(i)
-                             ref.delete().addOnCompleteListener {
-                                 if(it.isSuccessful)
-                                 {
-                                     if(i==msg.photos.last())
-                                     {
-                                         mess.toast("Message deleted")
-                                         binding.msgAdder.removeView(layout)
-                                         mess.pbDismiss()
-                                     }
-                                 }else
-                                 {
-                                     mess.toast(it.exception?.message.toString())
-                                     mess.pbDismiss()
-                                 }
-                             }
-                         }
-                         if(msg.photos.size==0)
-                         mess.pbDismiss()
-
-                     }
-                     else
-                     {
-                         mess.toast(it.exception?.message.toString())
-                         mess.pbDismiss()
-                     }
-                 }
-
-                 dialog.dismiss()
-             }
-             dialog.setNegativeButton("No"){dialog,_->
-                 dialog.dismiss()
-             }
-             dialog.show()
-
-
-
-
-         }
-        binding.msgAdder.addView(layout)
     }
 }

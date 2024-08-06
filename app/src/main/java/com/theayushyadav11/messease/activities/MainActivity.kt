@@ -4,6 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -12,6 +16,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
@@ -67,6 +73,24 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarMain.toolbar)
         drawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
+        val headerView: View = navView.getHeaderView(0)
+        val  layout: LinearLayout = headerView.findViewById(R.id.navMain)
+        val requestOptions = RequestOptions.circleCropTransform()
+        Glide.with(this)
+            .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
+            .apply(requestOptions)
+            .into( layout.findViewById<ImageView>(R.id.propic))
+        layout.findViewById<TextView>(R.id.name).text = FirebaseAuth.getInstance().currentUser?.displayName
+        layout.findViewById<TextView>(R.id.email).text = FirebaseAuth.getInstance().currentUser?.email
+
+
+
+
+
+
+
+
+
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         val menu: Menu = navView.menu
         val menuItem1 = menu.findItem(R.id.nav_messCommitteeActivity)

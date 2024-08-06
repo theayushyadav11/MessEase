@@ -85,57 +85,61 @@ class EditComplete : AppCompatActivity() {
     }
 
     fun sendToCorrdi(note: String, creater: String) {
-        mess.addPb("Sending...")
-        val key = FirebaseDatabase.getInstance().reference.push().key.toString()
-        FireBase().uploadPdfToFirebase(0, uri, key, onSuccess = { pdfurl ->
+        try {
+            mess.addPb("Sending...")
+            val key = FirebaseDatabase.getInstance().reference.push().key.toString()
+            FireBase().uploadPdfToFirebase(0, uri, key, onSuccess = { pdfurl ->
 
-            val roomDatabase = MenuDatabase.getDatabase(this).menuDao()
-            lifecycleScope.launch(Dispatchers.IO) {
-                editedMenu = roomDatabase.getEditedMenu()
+                val roomDatabase = MenuDatabase.getDatabase(this).menuDao()
+                lifecycleScope.launch(Dispatchers.IO) {
+                    editedMenu = roomDatabase.getEditedMenu()
 
-                mess.log(editedMenu)
+                    mess.log(editedMenu)
 
-                val aprMenu =
-                    AprMenu(
-                        key,
-                        note,
-                        url = pdfurl,
-                        creater,
-                        date = Date(),
-                        menu = Menu2(editedMenu.id, editedMenu.menu),
-                        displayDate = mess.getCurrentTimeAndDate()
-                    )
+                    val aprMenu =
+                        AprMenu(
+                            key,
+                            note,
+                            url = pdfurl,
+                            creater,
+                            date = Date(),
+                            menu = Menu2(editedMenu.id, editedMenu.menu),
+                            displayDate = mess.getCurrentTimeAndDate()
+                        )
 
-                FirebaseDatabase.getInstance().reference.child("forApproval").child(key)
-                    .setValue(aprMenu)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            mess.toast("Menu send for approval.")
-                            GlobalScope.launch(Dispatchers.IO) {
-                                val databse = MenuDatabase.getDatabase(this@EditComplete).menuDao()
-                                databse.addMenu(editedMenu)
+                    FirebaseDatabase.getInstance().reference.child("forApproval").child(key)
+                        .setValue(aprMenu)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                mess.toast("Menu send for approval.")
+                                GlobalScope.launch(Dispatchers.IO) {
+                                    val databse = MenuDatabase.getDatabase(this@EditComplete).menuDao()
+                                    databse.addMenu(editedMenu)
+                                }
+                            } else {
+                                mess.toast(it.exception?.message.toString())
                             }
-                        } else {
-                            mess.toast(it.exception?.message.toString())
+
                         }
 
-                    }
 
-
-            }
+                }
 
 
 
 
-            mess.pbDismiss()
-            binding.send.isVisible = false
-        },
-            onFailure = { exception ->
-
-                mess.toast(exception.message.toString())
                 mess.pbDismiss()
+                binding.send.isVisible = false
+            },
+                onFailure = { exception ->
 
-            })
+                    mess.toast(exception.message.toString())
+                    mess.pbDismiss()
+
+                })
+        } catch (e: Exception) {
+
+        }
 
 
     }

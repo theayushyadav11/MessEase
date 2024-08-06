@@ -245,7 +245,6 @@ class LoginInFragment : Fragment() {
                             navigate()
 
                         } else {
-                            // Email is not verified
                             Toast.makeText(
                                 requireContext(),
                                 "Please verify your email address",
@@ -253,7 +252,7 @@ class LoginInFragment : Fragment() {
                             ).show()
                         }
                     } else {
-                        // If sign in fails, display a message to the user.
+
                         Toast.makeText(
                             requireContext(), task.exception?.message,
                             Toast.LENGTH_SHORT
@@ -267,30 +266,34 @@ class LoginInFragment : Fragment() {
     }
 
     private fun checkEmailAllowed() {
-        val email = auth.currentUser?.email?.trim()
-        val list: MutableList<String> = mutableListOf()
-        database.reference.child("allow").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (user in snapshot.children) {
-                    if (!(email == user.value.toString().trim())) {
+        try {
+            val email = auth.currentUser?.email?.trim()
+            val list: MutableList<String> = mutableListOf()
+            database.reference.child("allow").addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (user in snapshot.children) {
+                        if (!(email == user.value.toString().trim())) {
 
-                        Mess(requireContext()).setIsMember(false)
+                            Mess(requireContext()).setIsMember(false)
 
-                    } else {
-                        Mess(requireContext()).setIsMember(true)
-                        break
+                        } else {
+                            Mess(requireContext()).setIsMember(true)
+                            break
+                        }
                     }
+
+
                 }
 
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
 
 
-            }
-        })
-        Log.d("Yatin", list.toString())
+                }
+            })
+            Log.d("Yatin", list.toString())
+        } catch (e: Exception) {
+
+        }
 
 
     }

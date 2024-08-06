@@ -95,7 +95,9 @@ fun initialize()
                         val usr=LayoutInflater.from(requireContext()).inflate(R.layout.name_time,adder,false)
                         val name = usr.findViewById<TextView>(R.id.name)
                         val time=usr.findViewById<TextView>(R.id.time)
-                        name.text=os[i].name+"  "+os[i].email
+                        val email=usr.findViewById<TextView>(R.id.email)
+                        name.text=os[i].name
+                        email.text=os[i].email
                         time.text=os[i].time+" "+os[i].date
                         adder.addView(usr)
                     } catch (e: Exception) {

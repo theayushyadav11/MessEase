@@ -42,6 +42,7 @@ class MenuMaking : AppCompatActivity() {
     private var texts: MutableList<MutableList<TextView>> = mutableListOf()
     private var isClicked = false
     private lateinit var currentMenu: Menu
+    private var isEdited=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -245,6 +246,7 @@ class MenuMaking : AppCompatActivity() {
                     bind.done.setOnClickListener {
                         if (bind.etUpdate.text.toString().trim().isNotEmpty()) {
                             texts[i][j].text = bind.etUpdate.text.toString().trim()
+                            isEdited=true
                             dialog.dismiss()
                         } else {
                             mess.toast("Cannot add empty item.")
@@ -346,19 +348,26 @@ class MenuMaking : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Alert!")
-        builder.setCancelable(false)
-        builder.setMessage("Are you sure you want to exit? Your edited data will be lost.")
-        builder.setPositiveButton("Ok") { dialog, which ->
+        if (isEdited) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Alert!")
+            builder.setCancelable(false)
+            builder.setMessage("Are you sure you want to exit? Your edited data will be lost.")
+            builder.setPositiveButton("Ok") { dialog, which ->
+                super.onBackPressed()
+                finish()
+                dialog.dismiss()
+            }
+            builder.setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            builder.show()
+        }
+        else
+        {
             super.onBackPressed()
             finish()
-            dialog.dismiss()
         }
-        builder.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
-        builder.show()
     }
 
 }

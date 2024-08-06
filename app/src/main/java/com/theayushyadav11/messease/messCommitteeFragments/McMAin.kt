@@ -76,7 +76,9 @@ class McMAin : Fragment() {
 
     fun listeners() {
         binding.ivBack.setOnClickListener {
-            startActivity(Intent(requireContext(), MainActivity::class.java))
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
         }
         binding.btnPoll.setOnClickListener {
             findNavController().navigate(R.id.action_mcMain2_to_createPoll)
@@ -89,13 +91,26 @@ class McMAin : Fragment() {
         }
 
         binding.uploadMenu.setOnClickListener {
-            mess.disign.observe(requireActivity(), Observer {
-                if (it.equals("Coordinator")) {
-                    findNavController().navigate(R.id.action_mcMain2_to_uploadMenuFragment)
-                } else {
-                    mess.toast("Only Coordinator can upload Menu")
-                }
-            })
+            database.child("UsersMc").child(auth.currentUser?.uid.toString()).child("designation")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val des = snapshot.value.toString()
+                        if (des.equals("Coordinator")) {
+                            findNavController().navigate(R.id.action_mcMain2_to_uploadMenuFragment)
+                        } else {
+                            mess.toast("Only Coordinator can upload Menu")
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d("Error", error.message)
+                    }
+                })
+
+
+
+
+
         }
 
     }

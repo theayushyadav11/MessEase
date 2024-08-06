@@ -24,6 +24,7 @@ class McMenu() : Fragment() {
     private lateinit var menu: Menu2
 
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initialise()

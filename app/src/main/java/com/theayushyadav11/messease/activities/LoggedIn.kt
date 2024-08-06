@@ -16,10 +16,9 @@ import com.theayushyadav11.messease.utils.Mess
 
 class LoggedIn : AppCompatActivity() {
     private lateinit var binding: ActivityLoggedInBinding
-    private lateinit var navController: NavController
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
-    private lateinit var mess:Mess
+    private lateinit var mess: Mess
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoggedInBinding.inflate(layoutInflater)
@@ -34,7 +33,7 @@ class LoggedIn : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
         binding.root.isVisible = false
-        mess=Mess(this)
+        mess = Mess(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -43,29 +42,29 @@ class LoggedIn : AppCompatActivity() {
     }
 
     private fun isMember() {
-
-      FireBase().isMember(auth.currentUser?.uid.toString(), onSuccess = {
-            if (!it)
-            {
-                mess.toast(it.toString())
-
+        mess.addPb("Checking your membership status...")
+        FireBase().isMember(auth.currentUser?.uid.toString(), onSuccess = {
+            mess.pbDismiss()
+            if (!it) {
                 binding.root.isVisible = false
-          val builder = AlertDialog.Builder(this)
-          builder.setTitle("Alert!")
-          builder.setCancelable(false)
-          builder.setMessage("You are not a member of Mess Committee!")
-          builder.setPositiveButton("Ok") { dialog, _ ->
-              val intent = Intent(this, MainActivity::class.java)
-              intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-              startActivity(intent)
-              dialog.dismiss()
-          }
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Alert!")
+                builder.setCancelable(false)
+                builder.setMessage("You are not a member of Mess Committee!")
+                builder.setPositiveButton("Ok") { dialog, _ ->
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    startActivity(intent)
+                    dialog.dismiss()
+                }
 
-          builder.show()
-      } else {
-          binding.root.isVisible = true
-      }
+                builder.show()
+            } else {
+                mess.pbDismiss()
+                binding.root.isVisible = true
+            }
         }, onFailure = {
+            mess.pbDismiss()
             binding.root.isVisible = false
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Alert!")
