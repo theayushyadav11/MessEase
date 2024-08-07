@@ -1,8 +1,17 @@
 package com.theayushyadav11.messease.activities
 
+import android.Manifest
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -10,7 +19,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -29,11 +41,14 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.theayushyadav11.messease.R
 import com.theayushyadav11.messease.databinding.ActivityMainBinding
+import com.theayushyadav11.messease.utils.AlarmReceiver
 import com.theayushyadav11.messease.utils.Mess
 import com.theayushyadav11.messease.viewModels.Menu2
 import com.theayushyadav11.myapplication.database.MenuDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,6 +56,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var alarmManager: AlarmManager
+    private val REQUEST_CODE_POST_NOTIFICATIONS = 1
+    private val REQUEST_CODE_SCHEDULE_EXACT_ALARM = 2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,6 +66,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         init()
         savedatabase()
+        createNotificationChannel()
+        askForNotificationPermission()
+
 
     }
     fun savedatabase() {
@@ -201,10 +222,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
     fun signOut() {
         var mAuth = FirebaseAuth.getInstance()
 
@@ -226,12 +243,108 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "getString(R.string.channel_name)"
+            val descriptionText = "getString(R.string.channel_description)"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("DailyNotification", name, importance).apply {
+                description = descriptionText
+            }
 
-    data class NotificationData(
-        val hour: Int,
-        val minute: Int,
-        val title: String,
-        val text: String,
-        val id: Int
-    )
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun setAlarm() {
+        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this@MainActivity, AlarmReceiver::class.java)
+
+        val times = listOf("08:00","12:00","16:30","19:30")
+        for (i in 0 until times.size) {
+
+            val calendar = Calendar.getInstance()
+            val c = Calendar.getInstance()
+            val timeParts = times[i].split(":")
+            calendar.set(Calendar.HOUR_OF_DAY, timeParts[0].toInt())
+            calendar.set(Calendar.MINUTE,timeParts[1].toInt())
+            calendar.set(Calendar.SECOND, 0)
+            if (calendar.timeInMillis < System.currentTimeMillis()) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1)
+            }
+            intent.putExtra("type", i)
+            val pendingIntent = PendingIntent.getBroadcast(
+                this@MainActivity,
+                times[i].hashCode(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
+            )
+        }
+
+    }
+
+    private fun askForNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_CODE_POST_NOTIFICATIONS)
+            } else {
+                askForExactAlarmPermission()
+            }
+        } else {
+            askForExactAlarmPermission()
+        }
+    }
+
+    private fun askForExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                val intent = Intent().apply {
+                    action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                    data = Uri.parse("package:$packageName")
+                }
+                startActivityForResult(intent, REQUEST_CODE_SCHEDULE_EXACT_ALARM)
+            } else {
+                setAlarm()
+            }
+        } else {
+            setAlarm()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_CODE_POST_NOTIFICATIONS -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    askForExactAlarmPermission()
+                } else {
+                    Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SCHEDULE_EXACT_ALARM) {
+            // Check if the permission is granted
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (alarmManager.canScheduleExactAlarms()) {
+                setAlarm()
+            } else {
+                Toast.makeText(this, "Exact alarm permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }

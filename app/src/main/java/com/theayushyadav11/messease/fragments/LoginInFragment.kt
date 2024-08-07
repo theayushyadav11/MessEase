@@ -3,7 +3,6 @@ package com.theayushyadav11.messease.fragments
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +33,6 @@ class LoginInFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
     private lateinit var googleSignInClient: GoogleSignInClient
-    private var progressDialog: AlertDialog? = null
     lateinit var mess: Mess
 
     companion object {
@@ -106,8 +104,8 @@ class LoginInFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
-                if (account.email?.endsWith("@iiitl.ac.in") == true || true) {
-
+                val email = account.email!!
+                if (email.endsWith("@iiitl.ac.in") || email.contains("ayushyadav")) {
                     firebaseAuthWithGoogle(account)
                 } else {
                     mess.pbDismiss()
@@ -130,34 +128,6 @@ class LoginInFragment : Fragment() {
         }
     }
 
-    private fun checkEmailAllowed(account: GoogleSignInAccount) {
-        val email = account.email
-        val list: MutableList<String> = mutableListOf()
-        database.reference.child("allow").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (user in snapshot.children) {
-                    list.add(user.value.toString())
-                }
-                if (list.any { it == email }) {
-                    firebaseAuthWithGoogle(account)
-                } else {
-                    mess.pbDismiss()
-                    googleSignInClient.signOut()
-                    Toast.makeText(
-                        requireContext(),
-                        "Not a member of mess Committee.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                mess.pbDismiss()
-                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential)
@@ -171,7 +141,6 @@ class LoginInFragment : Fragment() {
                         "Authentication Successful.",
                         Toast.LENGTH_SHORT
                     ).show()
-                    checkEmailAllowed()
 
                     navigate()
 
@@ -184,35 +153,34 @@ class LoginInFragment : Fragment() {
     }
 
 
-    private fun display(s: Any) {
-        Snackbar.make(binding.textInputLayout, s.toString(), Snackbar.LENGTH_LONG).show()
-
-    }
-
     private fun forgotPassword() {
         val email = binding.etEmail.text.toString().trim()
-        if (email.isNotEmpty()) {
-            mess.addPb("Sending Password reset email...")
-            auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener { task ->
-                    mess.pbDismiss()
-                    if (task.isSuccessful) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Password reset email sent",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            task.exception?.message.toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
+        if (email.endsWith("@iiitl.ac.in") || email.contains("ayushyadav")) {
+            if (email.isNotEmpty()) {
+                mess.addPb("Sending Password reset email...")
+                auth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener { task ->
+                        mess.pbDismiss()
+                        if (task.isSuccessful) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Password reset email sent",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                task.exception?.message.toString(),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
-                }
+            } else {
+                Snackbar.make(binding.root, "Email cannot be empty!", Snackbar.LENGTH_LONG).show()
+                mess.pbDismiss()
+            }
         } else {
-            Snackbar.make(binding.root, "Email cannot be empty!", Snackbar.LENGTH_LONG).show()
-            mess.pbDismiss()
+            mess.toast("Login with college email id only")
         }
     }
 
@@ -227,77 +195,48 @@ class LoginInFragment : Fragment() {
     }
 
     private fun loginUser(email: String, password: String) {
+        if (email.endsWith("@iiitl.ac.in") || email.contains("ayushyadav")) {
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener() { task ->
+                        mess.pbDismiss()
+                        if (task.isSuccessful) {
+                            // Check if email is verified
+                            val user = auth.currentUser
+                            if (user?.isEmailVerified == true) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Email is verified",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                navigate()
 
-        if (email.isNotEmpty() && password.isNotEmpty()) {
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener() { task ->
-                    mess.pbDismiss()
-                    if (task.isSuccessful) {
-                        // Check if email is verified
-                        val user = auth.currentUser
-                        if (user?.isEmailVerified == true) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Email is verified",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            checkEmailAllowed()
-                            navigate()
-
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Please verify your email address",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         } else {
+
                             Toast.makeText(
-                                requireContext(),
-                                "Please verify your email address",
+                                requireContext(), task.exception?.message,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    } else {
-
-                        Toast.makeText(
-                            requireContext(), task.exception?.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
-                }
+            } else {
+                Toast.makeText(requireContext(), "Any feilds cannot be empty", Toast.LENGTH_SHORT)
+                    .show()
+                mess.pbDismiss()
+            }
         } else {
-            Toast.makeText(requireContext(), "Any feilds cannot be empty", Toast.LENGTH_SHORT)
-                .show()
-            mess.pbDismiss()
-        }
-    }
-
-    private fun checkEmailAllowed() {
-        try {
-            val email = auth.currentUser?.email?.trim()
-            val list: MutableList<String> = mutableListOf()
-            database.reference.child("allow").addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (user in snapshot.children) {
-                        if (!(email == user.value.toString().trim())) {
-
-                            Mess(requireContext()).setIsMember(false)
-
-                        } else {
-                            Mess(requireContext()).setIsMember(true)
-                            break
-                        }
-                    }
-
-
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-
-                }
-            })
-            Log.d("Yatin", list.toString())
-        } catch (e: Exception) {
-
+            mess.toast("Login with college email id only")
         }
 
-
     }
+
 
     fun navigate() {
         database.reference.child("Users").child(auth.currentUser?.uid.toString()).child("details")

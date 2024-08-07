@@ -123,7 +123,7 @@ class PollsFragmentViewModel : ViewModel() {
                     .addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val poll = snapshot.getValue(Poll::class.java)
-                            Log.d(":chell", poll.toString())
+
                             if (poll != null) {
                                 pollsList.add(poll)
                                 pollsList.sortByDescending { it.comp }
@@ -152,6 +152,7 @@ class PollsFragmentViewModel : ViewModel() {
                     var tv = 0
                     for (child in snapshot.children) {
                         tv++
+
                         val optionSelected = child.getValue(OptionSelected::class.java)
                         if (optionSelected?.selected == option)
                             count++
